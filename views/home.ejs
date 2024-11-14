@@ -1,0 +1,129 @@
+<%- include("./partials/header.ejs") %>
+<%- include("./partials/navbar.ejs") %>
+<body>
+    <div class="container mt-5 pt-4">
+        <h1 class="mt-4 mb-4 text-center"><strong>Painel Administrativo - RAMB</strong></h1>
+        <div class="alert alert-info" role="alert">
+            Bem-vindo(a) ao painel administrativo! Aqui você pode gerenciar instituições, migrantes, formulários e mais. Explore as seções abaixo para acessar cada página ou navegue pelo menu.
+        </div>
+
+        <h2 class="mt-4 mb-3">Estatísticas Rápidas</h2>
+        <div class="row text-center">
+            <div class="col-md-3">
+                <div class="p-3 bg-light rounded shadow-sm">
+                    <h4><%= institutionCount %></h4>
+                    <p>Instituições Cadastradas</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="p-3 bg-light rounded shadow-sm">
+                    <h4><%= migrantCount %></h4>
+                    <p>Migrantes Cadastrados</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="p-3 bg-light rounded shadow-sm">
+                    <h4><%= pendingFormsCount %></h4>
+                    <p>Formulários Pendentes</p>
+                </div>
+            </div>
+            <% if (user.role === 'admin') { %>
+            <div class="col-md-3">
+                <div class="p-3 bg-light rounded shadow-sm">
+                    <h4><%= userCount %></h4>
+                    <p>Usuários no Sistema</p>
+                </div>
+            </div>
+            <% } %>
+        </div>
+
+        <h2 class="mt-4 mb-3">Resumo Geral</h2>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card bg-primary text-white mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Instituições</h5>
+                        <p class="card-text">Veja todas as instituições cadastradas e gerencie suas informações e endereços.</p>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between">
+                        <a href="/dashboard/institutions" class="btn btn-light btn-sm">Ver todas Instituições</a>
+                        <i class="bi bi-building-fill fs-4"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card bg-success text-white mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Migrantes</h5>
+                        <p class="card-text">Gerencie o cadastro dos migrantes e acompanhe seus dados e necessidades.</p>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between">
+                        <a href="/dashboard/migrants" class="btn btn-light btn-sm">Ver todos Migrantes</a>
+                        <i class="bi bi-people-fill fs-4"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card bg-warning text-white mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Formulários Pendentes</h5>
+                        <p class="card-text">Acesse e acompanhe os formulários pendentes para analisar e tomar uma ação.</p>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between">
+                        <a href="/dashboard/forms/migrants" class="btn btn-light btn-sm">Gerenciar Formulários</a>
+                        <i class="bi bi-file-earmark-text-fill fs-4"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="mt-4 mb-3">Ferramentas e Recursos</h2>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card bg-info text-white mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Termos e Condições</h5>
+                        <p class="card-text">Visualize e atualize os termos e condições para o uso do sistema.</p>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between">
+                        <a href="/dashboard/terms" class="btn btn-light btn-sm">Acessar Termos</a>
+                        <i class="bi bi-file-earmark-text fs-4"></i>
+                    </div>
+                </div>
+            </div>
+
+            <% if (user.role === 'admin') { %>
+            <div class="col-md-4">
+                <div class="card bg-secondary text-white mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Manual do Migrante</h5>
+                        <p class="card-text">Acesse e edite o manual de orientação para migrantes.</p>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between">
+                        <a href="/dashboard/manual-migrante" class="btn btn-light btn-sm">Acessar Manual</a>
+                        <i class="bi bi-journal-text fs-4"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card bg-danger text-white mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Gestão de Usuários</h5>
+                        <p class="card-text">Controle o acesso ao sistema e gerencie permissões.</p>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between">
+                        <a href="/dashboard/users" class="btn btn-light btn-sm">Gerenciar Usuários</a>
+                        <i class="bi bi-person-badge-fill fs-4"></i>
+                    </div>
+                </div>
+            </div>
+            <% } %>
+        </div>
+    </div>
+<%- include("./partials/footer.ejs") %>
+</body>
+<script src="/js/scriptHome.js"></script>
+</html>

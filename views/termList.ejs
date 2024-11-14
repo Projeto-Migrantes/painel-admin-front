@@ -1,0 +1,89 @@
+<%- include("./partials/header.ejs") %>
+<body>
+    <div class="container my-5">
+        <%- include("./partials/navbar.ejs") %>
+        <br>
+        <h1 class="mb-4 mt-2 text-center"><strong>Termos e Condições</strong></h1>
+        <div id="copy-success-alert" class="alert alert-success alert-dismissible fade show" role="alert" style="display: none;">
+            <strong>Link copiado!</strong> O link foi copiado para a área de transferência.
+        </div>
+        <div class="row">
+            <% terms.forEach(term => { %>
+                <div class="col-12 mb-4"> 
+                    <div class="card">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="card-title mt-2">
+                                <% if(term.type === 'migrante') { %> 
+                                    Termos e Condições para Migrantes
+                                <% } else if(term.type === 'instituicao') { %>
+                                    Termos e Condições para Instituições
+                                <% } else { %>
+                                    <%= term.type.charAt(0).toUpperCase() + term.type.slice(1) %>
+                                <% } %>
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <p><strong>Atualizado em:</strong> 
+                                <%= new Date(term.updatedAt).toLocaleDateString("pt-BR") %> às 
+                                <%= new Date(term.updatedAt).toLocaleTimeString("pt-BR", { 
+                                    hour12: false, 
+                                    hour: '2-digit', 
+                                    minute: '2-digit', 
+                                    second: '2-digit' 
+                                }) %>
+                            </p>
+                            <p class="card-text">
+                                <small class="text-muted">Última atualização do termo.</small>
+                            </p>
+                        </div>
+                        <div class="card-footer d-flex justify-content-between align-items-center">
+                            <div>
+                                <a href="/terms/<%= term.type %>" target="_blank" class="btn btn-info btn-sm me-2">
+                                    <i class="bi bi-eye-fill"></i> Detalhes
+                                </a>
+                                <button class="btn btn-info btn-sm" onclick="copyLink('<%= '/terms/' + term.type %>')">
+                                    <i class="bi bi-clipboard"></i> Copiar Link
+                                </button>
+                            </div>
+
+                            <% if(user.role === 'admin') { %>
+                                <a href="/dashboard/edit-terms/<%= term.type %>" class="btn btn-primary btn-sm">
+                                    <i class="bi bi-pencil"></i> Editar
+                                </a>
+                            <% } %>
+                        </div>
+                    </div>
+                </div>
+            <% }) %>
+        </div>
+
+        <% if(user.role != 'admin'){ %>
+            <div class="alert alert-warning" role="alert">
+                <i class="bi bi-exclamation-triangle"></i> <strong>Atenção!</strong> Você não tem permissão para editar os termos. Caso precise de ajustes, entre em contato com um administrador.
+            </div>
+        <% } else { %>
+            <div class="alert alert-info" role="alert">
+                <i class="bi bi-info-circle"></i> <strong>Importante!</strong> Você tem permissão para editar os termos. Certifique-se de que está fazendo as alterações corretamente.
+            </div>
+        <% } %>
+       
+    </div>
+    <%- include("./partials/footer.ejs") %>
+    <script>
+        function copyLink(url) {
+            const input = document.createElement('input');
+            input.value = window.location.origin + url; 
+            document.body.appendChild(input);
+            input.select();
+            document.execCommand('copy'); 
+            document.body.removeChild(input);
+
+            const successAlert = document.getElementById('copy-success-alert');
+            successAlert.style.display = 'block';
+
+            setTimeout(() => {
+                successAlert.style.display = 'none';
+            }, 3000);
+        }
+    </script>
+</body>

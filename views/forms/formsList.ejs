@@ -1,0 +1,193 @@
+<%- include("../partials/header.ejs") %>
+<body>
+    <div class="container my-5">
+        <%- include("../partials/navbar.ejs") %>
+        <br>
+        <br>
+        <h1 class="mb-4 text-center"><strong>Formulários Enviados Pelos Migrantes</strong></h1>
+        <div class="card mb-5 shadow-sm border-0">
+            <div class="card-body p-4">
+                <h5 class="card-title text-secondary fw-semibold mb-4">
+                    Filtrar por Status:
+                </h5>
+                <form action="/dashboard/forms/status" method="GET" class="d-flex">
+                    <select class="form-select w-75 shadow-sm rounded me-2" name="status" required aria-label="Filtrar por Status">
+                        <option value="" disabled <%= !selectedStatus ? "selected" : "" %>>Escolha um Status</option>
+                        <option value="todos" <%= selectedStatus === "todos" ? "selected" : "" %>>Todos</option>
+                        <option value="unread" <%= selectedStatus === "unread" ? "selected" : "" %>>Não Lido</option>
+                        <option value="read" <%= selectedStatus === "read" ? "selected" : "" %>>Lido</option>
+                        <option value="resolved" <%= selectedStatus === "resolved" ? "selected" : "" %>>Resolvido</option>
+                    </select>
+                    <button class="btn btn-primary shadow-sm ml-auto" type="submit">
+                        <i class="bi bi-filter"></i> Filtrar
+                    </button>
+                </form>
+            </div>
+        </div>
+        <% if (typeof error !== 'undefined' && error) { %>
+            <div class="alert alert-danger">
+                <%= error %>
+            </div>
+        <% } %>
+
+        <!-- Exibe mensagens de Sucesso -->
+        <% if (successMessage && successMessage != "") { %>
+            <div class="alert alert-success"><%= successMessage %></div>
+        <% } %>
+        
+        <!-- Exibe mensagens de erro -->
+        <% if (errorMessage && errorMessage != "") { %>
+            <div class="alert alert-danger"><%= errorMessage %></div>
+        <% } %>
+        <div class="row">
+            <% forms.forEach(form => { %>
+                <div class="col-12 mb-4">
+                    <div class="card shadow-sm">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">Assunto: <%= form.subject %></h5>
+                            <% if (form.status === "read") { %>
+                                <span class="badge badge-primary">Lido</span>
+                            <% } else if (form.status === "resolved") { %>
+                                <span class="badge badge-success">Resolvido</span>
+                            <% } else { %>
+                                <span class="badge badge-warning text-dark">Não Lido</span>
+                            <% } %>
+                        </div>
+                        <div class="card-body">
+                            <p><strong>Nome:</strong> <%= form.name %></p>
+                            <p><strong>Telefone:</strong> <%= form.phone %></p>
+                            <p><strong>Email:</strong> <%= form.email %></p>
+                            <p><strong>Recebido em:</strong> 
+                                <%= new Date(form.createdAt).toLocaleDateString("pt-BR") %> 
+                                às 
+                                <%= new Date(form.createdAt).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit", second: "2-digit" }) %>
+                            </p>
+                        </div>
+                        <div class="card-footer d-flex justify-content-between align-items-center">
+                            <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#detailsModal<%= form.id %>">Ver Detalhes</button>
+
+                            <div class="d-flex">
+                                <% if (form.status !== "read" && form.status !== "resolved") { %>
+                                <form id="markAsReadForm<%= form.id %>" action="/dashboard/forms/read" method="POST" class="me-2 mr-2">
+                                    <input type="hidden" name="form_id" value="<%= form.id %>">
+                                    <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#confirmReadModal<%= form.id %>">Marcar como Lido</button>
+                                </form>
+                                <% } %>
+
+                                <% if(form.status !== "resolved" && form.status !== "unread"){ %>
+                                <form id="markAsResolvedForm<%= form.id %>" action="/dashboard/forms/resolved" method="POST" class="me-2 mr-2">
+                                    <input type="hidden" name="form_id" value="<%= form.id %>">
+                                    <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#confirmResolveModal<%= form.id %>">Marcar como Resolvido</button>
+                                </form>
+                                <% } %>
+
+
+                                <% if(form.status === "resolved" ){ %>
+                                <form id="deleteForm<%= form.id %>" action="/dashboard/forms/delete" method="POST" class="me-2 mr-2">
+                                    <input type="hidden" name="form_id" value="<%= form.id %>">
+                                    <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#confirmDeleteModal<%= form.id %>">Deletar</button>
+                                </form>
+                                  <% } %>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal para exibir os detalhes do formulário -->
+                <div class="modal fade" id="detailsModal<%= form.id %>" tabindex="-1" role="dialog" aria-labelledby="detailsModalLabel<%= form.id %>" aria-hidden="true">
+                    <div class="modal-dialog modal-lg" role="document"> 
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="detailsModalLabel<%= form.id %>">Detalhes do Formulário - <%= form.subject %></h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p><strong>Nome:</strong> <%= form.name %></p>
+                                <p><strong>Telefone:</strong> <%= form.phone %></p>
+                                <p><strong>Email:</strong> <%= form.email %></p>
+                                <p><strong>Assunto:</strong> <%= form.subject %></p>
+                                <p><strong>Mensagem:</strong> <%= form.message %></p>
+                                <p><strong>Recebido em:</strong> <%= new Date(form.createdAt).toLocaleDateString("pt-BR") %> às <%= new Date(form.createdAt).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit", second: "2-digit" }) %></p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal de Confirmação para Marcar como Lido -->
+                <div class="modal fade" id="confirmReadModal<%= form.id %>" tabindex="-1" role="dialog" aria-labelledby="confirmReadModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="confirmReadModalLabel">Confirmar Marcar como Lido</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                Tem certeza de que deseja marcar este formulário como lido?
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                <button type="button" class="btn btn-primary" onclick="submitMarkAsReadForm(<%= form.id %>)">Confirmar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Modal de Confirmação para Marcar como Resolvido -->
+                <div class="modal fade" id="confirmResolveModal<%= form.id %>" tabindex="-1" role="dialog" aria-labelledby="confirmResolveModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="confirmResolveModalLabel">Confirmar Resolução</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                Tem certeza de que deseja marcar este formulário como resolvido?
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                <button type="button" class="btn btn-success" onclick="submitMarkAsResolvedForm(<%= form.id %>)">Confirmar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Modal de Confirmação para Deletar -->
+                <div class="modal fade" id="confirmDeleteModal<%= form.id %>" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="confirmDeleteModalLabel">Confirmar Exclusão</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                Tem certeza de que deseja deletar este formulário?
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                <button type="button" class="btn btn-danger" onclick="submitDeleteForm(<%= form.id %>)">Confirmar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <% }) %>
+        </div>
+    </div>
+<%- include("../partials/footer.ejs") %>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+<script src="/js/scriptFormsList.js"></script>
+</body>
+</html>

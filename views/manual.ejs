@@ -1,0 +1,56 @@
+<%- include("./partials/header.ejs") %>
+<%- include("./partials/navbar.ejs") %>
+<body>
+    <div class="container mt-5">
+        <br><br>
+        <h1 class="text-center mb-4"><strong>Manual do Migrante</strong></h1>
+        
+        <!-- Exibe mensagens de Sucesso -->
+        <% if (successMessage && successMessage != "") { %>
+            <div class="alert alert-success"><%= successMessage %></div>
+        <% } %>
+        
+        <!-- Exibe mensagens de erro -->
+        <% if (errorMessage && errorMessage != "") { %>
+            <div class="alert alert-danger"><%= errorMessage %></div>
+        <% } %>
+        <div class="row">
+            <% pdfs.forEach(pdf => { %>
+                <div class="col-12 mb-4">   
+                    <div class="card">
+                        <div class="card-header d-flex align-items-center">
+                            <img src="/img/flags/<%= pdf.language %>.png" alt="<%= pdf.language %> flag" class="flag-icon" style="width: 30px; height: 20px;">
+                            <h5 class="ml-2">
+                                <%= pdf.language === 'pt' ? 'Português' : pdf.language === 'en' ? 'Inglês' : pdf.language === 'es' ? 'Espanhol' : 'Francês' %>
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <form action="/dashboard/update-manual" method="POST">
+                                <input type="hidden" name="pdf_id" value="<%= pdf.id %>">
+                                <input type="hidden" name="language" value="<%= pdf.language %>">
+                                <div class="mb-3">
+                                    <label for="name_<%= pdf.id %>" class="form-label">Nome</label>
+                                    <input type="text" id="name_<%= pdf.id %>" name="name_<%= pdf.id %>" required maxlength="195" value="<%= pdf.name %>" class="form-control" placeholder="Nome">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="description_<%= pdf.id %>" class="form-label">Descrição</label>
+                                    <textarea id="description_<%= pdf.id %>" required name="description_<%= pdf.id %>" maxlength="500"  placeholder="Descrição" class="form-control"><%= pdf.description %></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="url_<%= pdf.id %>" class="form-label">URL do PDF</label>
+                                    <input type="url" id="url_<%= pdf.id %>" required name="url_<%= pdf.id %>" placeholder="URL" maxlength="1000" value="<%= pdf.url %>" class="form-control">
+                                </div>
+                                <div class="mb-3 d-flex justify-content-between">
+                                    <a href="<%= pdf.url %>" target="_blank" class="btn btn-info">Abrir Manual</a>
+                                    <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            <% }); %>
+        </div>
+    </div>
+</body>
+<%- include("./partials/footer.ejs") %>
+</html>

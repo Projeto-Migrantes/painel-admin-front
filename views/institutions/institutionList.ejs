@@ -1,0 +1,58 @@
+<%- include("../partials/header.ejs") %>
+<body>
+    <%- include("../partials/navbar.ejs") %>
+    <div class="container mt-4">
+        <br><br>
+        <h1 class="mt-4"><strong>Administração de Instituições</strong></h1>
+        <br>
+        <a href="/dashboard/institution/register" class="btn btn-primary mb-3">
+            <i class="bi bi-building-fill"></i>  Cadastrar Instituição
+        </a>
+        <form action="/dashboard/institutions/search" method="GET" class="mb-4">
+            <div class="input-group">
+                <input type="text" class="form-control" name="query" placeholder="Buscar por email, telefone ou CNPJ" aria-label="Buscar" required maxlength="100"> 
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="submit">
+                        <i class="bi bi-search"></i> Buscar
+                    </button>
+                </div>
+            </div>
+        </form>
+         <div class="d-flex justify-content-between">
+            <span id="contador"></span>
+            <div>
+                <button id="prevPage" class="btn btn-secondary btn-sm" disabled>
+                    <i class="bi bi-arrow-left"></i> Anterior
+                </button>
+                <button id="nextPage" class="btn btn-secondary btn-sm">
+                    Próximo <i class="bi bi-arrow-right ms-2"></i>
+                </button>
+            </div>
+        </div>
+        <table class="table table-striped mt-3">
+            <thead>
+                <tr>
+                    <th scope="col">Nome da Instituição</th>
+                    <th scope="col">CNPJ</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Telefone Principal</th>
+                    <th scope="col">Ações</th>
+                </tr>
+            </thead>
+            <tbody id="institutionTable">
+            </tbody>
+        </table>
+        <% if (typeof error !== 'undefined' && error) { %>
+            <div class="alert alert-danger">
+                <%= error %>
+            </div>
+        <% } %>
+    </div>
+    <%- include("../partials/footer.ejs") %>
+    <script>
+        const institutions = <%- JSON.stringify(institutions) %>;
+    </script>
+<script src="/js/scriptInstitutionList.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redirecionando...</title>
+    <script>
+        window.onload = function() {
+            document.getElementById('redirectForm').submit();
+        };
+    </script>
+</head>
+<body>
+    <form id="redirectForm" action="/dashboard/users/details" method="POST">
+        <input type="hidden" name="users_id" value="<%= userId %>">
+    </form>
+</body>
+</html>

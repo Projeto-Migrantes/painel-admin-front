@@ -1,0 +1,45 @@
+<%- include("../partials/header.ejs") %>
+<body>
+    <%- include("../partials/navbar.ejs") %>
+    <br>
+    <br>
+    <div class="container mt-5 mb-5">
+        <h1 class="mt-4 mb-3 text-primary">
+            <i class="bi bi-pencil-square"></i> Editar Usuário
+        </h1>
+        <form action="/dashboard/users/update" method="POST">
+            <input type="hidden" name="user_id" value="<%= user.id %>">
+            <div class="form-group">
+                <label for="name">Nome Completo*</label>
+                <input type="text" class="form-control" id="name" name="name" value="<%= user.name %>" placeholder="Nome Completo" required maxlength="150">
+            </div>
+            <div class="form-group">
+                <label for="email">Email*</label>
+                <input type="email" class="form-control" id="email" name="email" value="<%= user.email %>" placeholder="Email" required maxlength="100">
+                <div id="emailFeedback"></div>
+            </div>
+            <div class="form-group">
+                <label for="role">Função*</label>
+                <select class="form-control" id="role" name="role" required>
+                    <option value="" disabled>Selecione uma função</option>
+                    <option value="admin" <%= user.role === 'admin' ? 'selected' : '' %>>Administrador</option>
+                    <option value="user" <%= user.role === 'user' ? 'selected' : '' %>>Usuário</option>
+                </select>
+            </div>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                A função de <strong>Administrador</strong> tem acesso total ao sistema, podendo realizar todas as operações. Já a função de <strong>Usuário</strong> tem acesso restrito. 
+            </div>
+            <div class="form-group">
+            <!-- Alerta para validação -->
+            <div id="alert" class="alert alert-danger d-none" role="alert"></div>
+            <a href="/dashboard/migrants" class="btn btn-secondary mt-4">
+                <i class="bi bi-x-lg"></i> Cancelar
+            </a>
+            <button type="submit" class="btn btn-primary mt-4">
+                <i class="bi bi-save-fill"></i> Salvar Alterações
+            </button>
+        </form>
+    </div>
+    <%- include("../partials/footer.ejs") %>
+</body>
+<script src="/js/scriptUserEdit.js"></script>

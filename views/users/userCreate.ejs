@@ -1,0 +1,65 @@
+<%- include("../partials/header.ejs") %>
+<body>
+    <%- include("../partials/navbar.ejs") %>
+    <br>
+    <br>
+    <div class="container mt-5 mb-5">
+        <h1 class="mt-4 mb-3 text-primary">
+            <i class="bi bi-person-plus-fill"></i> Cadastrar Usuário
+        </h1>
+        <form action="/dashboard/users/create" method="POST">
+            <div class="form-group">
+                <label for="name">Nome Completo*</label>
+                <input type="text" class="form-control" id="name" name="name" placeholder="Nome Completo" required maxlength="150">
+            </div>
+            <div class="form-group">
+                <label for="email">Email*</label>
+                <input type="email" class="form-control" id="email" name="email" placeholder="Email" required maxlength="100">
+                <div id="emailFeedback"></div>
+            </div>
+            <div class="form-group">
+                <label for="role">Função*</label>
+                <select class="form-control" id="role" name="role" required>
+                    <option value="" disabled selected>Selecione uma função</option>
+                    <option value="admin">Administrador</option>
+                    <option value="user">Usuário</option>
+                </select>
+            </div>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                A função de <strong>Administrador</strong> tem acesso total ao sistema, podendo realizar todas as operações. Já a função de <strong>Usuário</strong> tem acesso restrito. 
+            </div>
+            <h3 class="mt-5 mb-3 text-primary">
+                <i class="bi bi-lock-fill"></i> Senha do usuário
+            </h3>
+            <p>Esta senha será usada juntamente com o e-mail cadastrado para acessar este painel administrativo.</p>
+            <div class="form-group">
+                <label for="password">Senha*</label>
+                <div class="input-group">
+                    <input type="password" class="form-control" id="password" name="password" placeholder="Senha" required maxlength="20">
+                    <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                        <i class="bi bi-eye-slash" id="eyeIcon"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="confirm_password">Confirme a Senha*</label>
+                <div class="input-group">
+                    <input type="password" class="form-control" id="confirm_password" name="confirm_password" placeholder="Confirme a Senha" required maxlength="20">
+                    <button class="btn btn-outline-secondary" type="button" id="toggleConfirmPassword">
+                        <i class="bi bi-eye-slash" id="eyeIconConfirm"></i>
+                    </button>
+                </div>
+            </div>
+            <!-- Alerta para validação -->
+            <div id="alert" class="alert alert-danger d-none" role="alert"></div>
+            <a href="/dashboard/migrants" class="btn btn-secondary mt-4">
+                <i class="bi bi-x-lg"></i> Cancelar
+            </a>
+            <button type="submit" class="btn btn-primary mt-4">
+                <i class="bi bi-save-fill"></i> Cadastrar Usuário
+            </button>
+        </form>
+    </div>
+    <%- include("../partials/footer.ejs") %>
+</body>
+<script src="/js/scriptUserCreate.js"></script>

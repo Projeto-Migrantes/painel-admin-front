@@ -1,0 +1,123 @@
+<%- include("../partials/header.ejs") %>
+<body>
+    <%- include("../partials/navbar.ejs") %>
+    <div class="container mt-5 mb-3">
+        <div class="text-center mb-4">
+            <hr>
+            <br>
+            <h3 class="text-primary text-uppercase">
+                <i class="bi bi-building-fill me-2"></i><strong> Informações da Instituição</strong>
+            </h3>
+            <hr class="my-4" style="width: 50%; margin: 0 auto;">
+        </div>
+        <div class="card shadow rounded mb-4">
+            <div class="card-header bg-primary text-white">
+                <i class="bi bi-card-checklist me-2"></i><strong> Principais Informações</strong>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>Nome:</strong> <%= institution.name || 'Não disponível' %></p>
+                        <p><strong>CNPJ:</strong> <%= institution.cnpj || 'Não disponível' %></p>
+                        <p><strong>Email:</strong> <%= institution.email || 'Não disponível' %></p>
+                        <p><strong>Telefone Principal:</strong> <%= institution.main_phone || 'Não disponível' %></p>
+                        <p><strong>Telefone Secundário:</strong> <%= institution.secondary_phone || 'Não disponível' %></p>
+                        <p><strong>Idioma Principal:</strong> <%= institution.main_language || 'Não disponível' %></p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Idioma Secundário:</strong> <%= institution.second_language || 'Não disponível' %></p>
+                        <p><strong>Site:</strong> 
+                            <% if (institution.site) { %>
+                                <a href="<%= institution.site %>" target="_blank"><%= institution.site %></a>
+                            <% } else { %> Não disponível <% } %>
+                        </p>
+                        <p><strong>Instagram:</strong> <%= institution.instagram || 'Não disponível' %></p>
+                        <p><strong>Link do Maps:</strong> 
+                            <% if (institution.link_maps) { %>
+                                <a href="<%= institution.link_maps %>" target="_blank"><%= institution.link_maps %></a>
+                            <% } else { %> Não disponível <% } %>
+                        </p>
+                        <p><strong>Categoria:</strong> <%= institution.Category?.category_pt || 'Não disponível' %></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card shadow rounded mb-4">
+            <div class="card-header bg-primary text-white">
+                <i class="bi bi-geo-alt me-2"></i><strong> Endereço</strong>
+            </div>
+            <div class="card-body">
+                <p><%= institution.Address.street %>, <%= institution.Address.neighborhood %>, <%= institution.Address.city %> - <%= institution.Address.state %>, nº <%= institution.address_number %> <%= institution.address_complement ? ', ' + institution.address_complement : '' %>, CEP: <%= institution.Address.cep %></p>
+                <a href="https://www.google.com/maps?q=<%= encodeURIComponent(institution.Address.street + ', ' + institution.Address.neighborhood + ', ' + institution.Address.city + ', ' + institution.Address.state + ', ' + institution.Address.cep) %>" target="_blank" class="btn btn-outline-primary">
+                    <i class="bi bi-map"></i> Ver no Mapa
+                </a>
+            </div>
+        </div>
+        <div class="card shadow rounded mb-4">
+            <div class="card-header bg-primary text-white">
+                <i class="bi bi-info-circle me-2"></i><strong> Outras Informações</strong>
+            </div>
+            <div class="card-body">
+                <p><strong>Descrição:</strong> <%= institution.InstitutionDescription?.description_pt || 'Não disponível' %></p>
+                <p><strong>Dias e Horários de Funcionamento:</strong> <%= institution.ServiceHour?.service_hours_pt || 'Não disponível' %></p>
+                <p><strong>População Alvo:</strong> <%= institution.TargetPopulation?.target_populations_pt || 'Não disponível' %></p>
+                <p><strong>Requisitos e Restrições:</strong> <%= institution.RequirementRestriction?.requirements_restrictions_pt || 'Não disponível' %></p>
+                <p><strong>Serviços Oferecidos:</strong> <%= institution.ServicesOffered?.services_offered_pt || 'Não disponível' %></p>
+                <p><strong>Custo dos Serviços:</strong> <%= institution.ServiceCost?.services_costs_pt || 'Não disponível' %></p>
+            </div>
+        </div>
+        <div class="card shadow rounded mb-4">
+            <div class="card-header bg-primary text-white">
+                <i class="bi bi-person-check me-2"></i><strong> Responsável pelo Cadastro</strong>
+            </div>
+            <div class="card-body">
+                <p><strong>Nome:</strong> <%= institution.ResponsibleUser?.name || 'Não disponível' %></p>
+                <p><strong>Posição:</strong> <%= institution.ResponsibleUser?.position || 'Não disponível' %></p>
+                <p><strong>Setor:</strong> <%= institution.ResponsibleUser?.sector || 'Não disponível' %></p>
+                <p><strong>Função:</strong> <%= institution.ResponsibleUser?.role || 'Não disponível' %></p>
+            </div>
+        </div>
+        <div class="text-left mt-3">
+            <a href="/dashboard/institutions" class="btn btn-secondary mr-2">
+                <i class="bi bi-arrow-left"></i> Voltar
+            </a>
+            <form action="/dashboard/institutions/edit" method="POST" style="display: inline;">
+                <input type="hidden" name="institution_id" value="<%= institution.id %>">
+                <button type="submit" class="btn btn-primary mr-2">
+                    <i class="bi bi-pencil"></i> Editar
+                </button>
+            </form>
+            <button class="btn btn-danger" data-toggle="modal" data-target="#deleteModal" onclick="confirmDelete('<%= institution.name %>', '<%= institution.id %>')">
+                <i class="bi bi-trash"></i> Deletar
+            </button>
+        </div>
+    </div>
+
+    <!-- Modal de Confirmação de Deleção -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Confirmação de Deleção</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Você tem certeza que deseja deletar a instituição <strong id="institutionName"></strong>?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <form method="POST" id="deleteForm" action="/dashboard/institutions/delete">
+                        <input type="hidden" name="_method" value="DELETE">
+                        <input type="hidden" name="institution_id" id="institution_id">
+                        <button type="submit" class="btn btn-danger" id="confirmDeleteButton">Deletar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <%- include("../partials/footer.ejs") %>
+    <script src="/js/scriptInstitutionDetails.js"></script>
+</body>
+</html>
