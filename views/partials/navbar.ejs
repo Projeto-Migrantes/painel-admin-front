@@ -4,7 +4,7 @@
     </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
-    </button>
+    </button>   
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item">
@@ -71,7 +71,7 @@
                 <div class="account-info">
                     <p><strong>Nome:</strong> <%= user.name %></p>
                 
-                    <% if(user.role === 'user') { %>
+                    <% if(user.name !== 'admin') { %>
                         <p><strong>Email:</strong> <%= user.email %></p>
                     <% } %> 
                 
@@ -90,7 +90,7 @@
                 </div>
                 <%  } else { %>
                     <div class="alert alert-danger mt-4" role="alert">
-                        <strong>Atenção!</strong> Você pode alterar ou excluir dados de outros usuários. Tome cuidado ao realizar as ações.
+                        <strong>Atenção!</strong> Você pode alterar ou excluir dados do Manual do Migrante, Gestão de Usuários e Termo e Condições. Tome cuidado ao realizar as ações.
                     </div>
                 <% } %> 
             </div>

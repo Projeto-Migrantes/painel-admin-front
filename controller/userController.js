@@ -6,8 +6,8 @@ import { api } from '../config/config.js';
 const getUsers = async (req, res) => {
     try {
         const response = await api.get('/users');
-        const users = response.data.users;
-
+        let users = response.data.users;
+        users = users.filter(user => user.email !== req.user.email);
         res.render('users/userList', { users })
     } catch (error) {
         console.error('Erro ao buscar usuários:', error);

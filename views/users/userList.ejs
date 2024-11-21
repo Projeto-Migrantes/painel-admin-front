@@ -28,7 +28,6 @@
                 </button>
             </div>
         </div>
-        
         <table class="table table-striped mt-3">
             <thead>
                 <tr>
@@ -42,14 +41,12 @@
             <tbody id="userTable">
             </tbody>
         </table>
-
         <% if (typeof error !== 'undefined' && error) { %>
             <div class="alert alert-danger">
                 <%= error %>
             </div>
         <% } %>
     </div>
-
     <%- include("../partials/footer.ejs") %>
 </body>
 <script>
