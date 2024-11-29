@@ -1,11 +1,11 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top" style="background-color: #192790;">
     <a class="navbar-brand" href="/dashboard/home">
-        <img src="/img/logo-navbar.svg" height="23px" style="margin-bottom: 4.5px;" class="mr-1"> Painel Administrativo
+        <img src="/img/logoNavbar.svg" height="45px" style="margin-bottom: 4.5px;" class="mr-1">
     </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>   
-    <div class="collapse navbar-collapse" id="navbarNav">
+    <div class="collapse navbar-collapse" id="navbarNav">   
         <ul class="navbar-nav mr-auto">
             <li class="nav-item">
                 <a class="nav-link" href="/dashboard/institutions">
@@ -41,6 +41,9 @@
             <% } %>
         </ul>
         <ul class="navbar-nav">
+            <li class="nav-item d-flex align-items-center mr-3">
+                <span class="navbar-text text-light">Version 1.0.0</span>
+            </li>
             <li class="nav-item mr-2">
                 <button class="btn btn-outline-light rounded-pill d-flex align-items-center me-3" data-toggle="modal" data-target="#accountModal">
                     <i class="bi bi-person-circle ms-3 mr-2"></i> Minha Conta

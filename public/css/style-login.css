@@ -23,47 +23,60 @@ body::before {
     filter: brightness(70%) blur(4px);
 }
 
-
 .card {
     background-color: whitesmoke;
     border: none;
     border-radius: 15px;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
 }
+
 .card-title {
     font-weight: bold; 
-    color: #007bff;
+    color: #F78B0B; 
 }
+
 .alert {
     margin-bottom: 20px; 
 }
+
 .input-group-text {
-    background-color: #007bff; 
+    background-color: #0116B9; 
     color: white;
     border: none; 
 }
+
 .form-control {
     border-radius: 10px;
-    border: 1px solid #007bff; 
+    border: 1px solid #0116B9; 
     transition: border-color 0.3s; 
 }
+
 .form-control:focus {
-    border-color: #0056b3;
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); 
+    border-color: #0b108a;
+    box-shadow: 0 0 5px rgba(1, 22, 185, 0.5);
 }
+
 .btn {
-    background-color: #007bff; 
+    background-color: #0116B9; 
     color: white;
     border-radius: 10px; 
 }
-.btn:hover {
-    background-color: #0c73e1 
-}
-.forgot-password {
-    color: #007bff; 
-}
-.forgot-password:hover {
-    color: #007bff;
-    
 
+.btn:hover {
+    background-color: #F78B0B;
 }
+
+.forgot-password {
+    color: #F78B0B; 
+}
+
+.forgot-password:hover {
+    color: #0116B9;
+}
+
+.logo-topo {
+    max-height: 100px; 
+    margin-bottom: 20px; 
+    animation: fadeIn 1s ease-in-out; 
+}
+

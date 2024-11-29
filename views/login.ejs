@@ -13,11 +13,14 @@
 <body>
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-8 col-lg-6">
+            <div class="col-12 text-center mb-4">
+                <img src="/img/logoNavbar.svg" height="80px" alt="Logo">
+            </div>
+            <div class="col-md-6 col-lg-7">
                 <div class="card p-4">
+                    <br>
                     <h3 class="card-title text-center">Painel Administrativo</h3>
-                    <p class="text-center mb-4">Faça login com o seu email e senha para acessar.</p>
-                    
+                    <p class="text-center mb-2">Faça login com o seu email e senha para acessar o sistema</p>
                     <form action="/login" method="POST">
                         <div class="form-group mb-4">
                             <label for="username">Email</label>
@@ -55,7 +58,7 @@
                         <button type="submit" id="buttonLogin" class="btn btn-light btn-block">Entrar</button>
                     </form>
 
-                    <div class="text-center mt-2">
+                    <div class="text-center mt-3">
                         <a href="/" class="forgot-password">Esqueceu a senha?</a>
                     </div>
                 </div>
@@ -64,24 +67,25 @@
     </div>
 
     <!-- Modal de Esqueci a Senha -->
-<div class="modal fade" id="forgotPasswordModal" tabindex="-1" role="dialog" aria-labelledby="forgotPasswordModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="forgotPasswordModalLabel">Esqueci a Senha</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
-            <span aria-hidden="true">&times;</span>
-          </button>
+    <div class="modal fade" id="forgotPasswordModal" tabindex="-1" role="dialog" aria-labelledby="forgotPasswordModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="forgotPasswordModalLabel">Esqueci a Senha</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Para alterar sua senha, entre em contato com um administrador.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                </div>
+            </div>
         </div>
-        <div class="modal-body">
-          <p>Para alterar sua senha, entre em contato com um administrador.</p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-        </div>
-      </div>
     </div>
-  </div>
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
