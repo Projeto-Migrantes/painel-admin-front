@@ -10,8 +10,8 @@ const getUsers = async (req, res) => {
         users = users.filter(user => user.email !== req.user.email);
         res.render('users/userList', { users })
     } catch (error) {
-        console.error('Erro ao buscar usuários:', error);
-        res.status(500).render('error', { message: 'Erro ao buscar usuários' });
+        console.error('Erro ao buscar administradores:', error);
+        res.status(500).render('error', { message: 'Erro ao buscar administrador' });
     };
 };
 
@@ -47,11 +47,11 @@ const createUser = async (req, res) => {
     try {
          await api.post('/users', newData);
 
-        req.flash('successMessage', 'Usuário cadastrado com sucesso!');
+        req.flash('successMessage', 'Administrador cadastrado com sucesso!');
         res.redirect('/dashboard/users');
     } catch (error) {
         console.error(error);
-        res.status(500).render('error', { message: 'Erro ao cadastrar o usuário' });
+        res.status(500).render('error', { message: 'Erro ao cadastrar o administrador' });
     };
 };
 
@@ -66,13 +66,13 @@ const getEditUserForm = async (req, res) => {
         const user = response.data.user;
 
         if (!user) {
-            return res.status(404).send({ message: 'Usuário não encontrado.' });
+            return res.status(404).send({ message: 'Administrador não encontrado.' });
         };
 
         res.render('users/userEdit', { user });
     } catch (error) {
         console.error(error);
-        res.status(500).render('error', { message: 'Erro ao obter os detalhes do usuário para edição.' });
+        res.status(500).render('error', { message: 'Erro ao obter os detalhes do administrador para edição.' });
     };
 };
 
@@ -93,11 +93,11 @@ const updateUser = async (req, res) => {
     try {
         await api.put(`/users/${userId}`, updatedData);
 
-        req.flash('successMessage', 'Usuário atualizado com sucesso!');
+        req.flash('successMessage', 'Administrador atualizado com sucesso!');
         res.redirect('/dashboard/users');
     } catch (error) {
         console.error(error);
-        res.status(500).render('error', { message: 'Erro ao atualizar o usuário' });
+        res.status(500).render('error', { message: 'Erro ao atualizar o administrador' });
     };
 };
 
@@ -109,11 +109,11 @@ const deleteUser = async (req, res) => {
     try {
         await api.delete(`/users/${userId}`);
 
-        req.flash('successMessage', 'Usuário deletado com sucesso!');
+        req.flash('successMessage', 'Administrador deletado com sucesso!');
         res.redirect('/dashboard/users');
     } catch (error) {
         console.error(error);
-        res.status(500).render('error', { message: 'Erro ao deletar o usuário' });
+        res.status(500).render('error', { message: 'Erro ao deletar o administrador' });
     };
 };
 
@@ -150,7 +150,7 @@ const updatePassword = async (req, res) => {
         res.redirect('/dashboard/users');
     } catch (error) {
         console.error('Erro ao buscar alterar senhar:', error);
-        return res.render('migrants/migrantUpdatePassword', { error: 'Erro ao atualizar senha do usuário.' });
+        return res.render('migrants/migrantUpdatePassword', { error: 'Erro ao atualizar senha do administrador.' });
     };
 };
 
@@ -172,7 +172,7 @@ const checkEmail = async (req, res) => {
         };
     } catch (error) {
         console.error(error); 
-        res.status(500).render('error', { message: 'Erro ao verifiacar email.' });
+        res.status(500).render('error', { message: 'Erro ao verificar email.' });
     };
 };
 

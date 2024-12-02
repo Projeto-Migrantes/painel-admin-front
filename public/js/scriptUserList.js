@@ -11,14 +11,23 @@ function renderTable() {
     tableBody.innerHTML = '';
 
     pageUsers.forEach(user => {
-        const roleLabel = user.role === 'admin' ? 'Administrador' : 'Usuário';
+        const roleLabel = user.role === 'admin' ? 'Super Administrador' : 'Administrador';
         
         const row = `
             <tr>
                 <td>${user.name}</td>
                 <td>${user.email}</td>
                 <td>${roleLabel}</td>
-                <td>${new Date(user.createdAt).toLocaleDateString()}</td>
+                <td>
+                    ${(() => {
+                        const date = new Date(user.createdAt);
+                        const day = String(date.getDate()).padStart(2, '0');
+                        const month = String(date.getMonth() + 1).padStart(2, '0'); // Lembre-se de que os meses começam do 0
+                        const year = date.getFullYear();
+                        return `${day}/${month}/${year}`;
+                    })()}
+                </td>
+
                 <td>
                     <div class="d-flex">
                         <form action="/dashboard/users/edit" method="POST" class="mr-2">
@@ -42,7 +51,7 @@ function renderTable() {
         tableBody.insertAdjacentHTML('beforeend', row);
     });
 
-    document.getElementById('contador').textContent = `Exibindo ${start + 1} a ${Math.min(end, users.length)} de ${users.length} usuários`;
+    document.getElementById('contador').textContent = `Exibindo ${start + 1} a ${Math.min(end, users.length)} de ${users.length} administradores`;
     document.getElementById('prevPage').disabled = currentPage === 1;
     document.getElementById('nextPage').disabled = end >= users.length;
 };
@@ -63,5 +72,7 @@ document.getElementById('nextPage').addEventListener('click', () => {
         renderTable();
     }
 });
+
+
 
 renderTable();

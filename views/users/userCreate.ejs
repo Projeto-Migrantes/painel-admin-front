@@ -5,7 +5,7 @@
     <br>
     <div class="container mt-5 mb-5">
         <h1 class="mt-4 mb-3 text-primary">
-            <i class="bi bi-person-plus-fill"></i> Cadastrar Usuário
+            <i class="bi bi-person-plus-fill"></i> Cadastrar Administrador
         </h1>
         <form action="/dashboard/users/create" method="POST">
             <div class="form-group">
@@ -21,15 +21,15 @@
                 <label for="role">Função*</label>
                 <select class="form-control" id="role" name="role" required>
                     <option value="" disabled selected>Selecione uma função</option>
-                    <option value="admin">Administrador</option>
-                    <option value="user">Usuário</option>
+                    <option value="admin">Super Administrador</option>
+                    <option value="user">Administrador</option>
                 </select>
             </div>
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                A função de <strong>Administrador</strong> tem acesso total ao sistema, podendo realizar todas as operações. Já a função de <strong>Usuário</strong> tem acesso restrito. 
+                A função de <strong>Super Administrador</strong> tem acesso total ao sistema, podendo realizar todas as operações. Já a função de <strong>Administrador</strong> tem acesso restrito. 
             </div>
             <h3 class="mt-5 mb-3 text-primary">
-                <i class="bi bi-lock-fill"></i> Senha do usuário
+                <i class="bi bi-lock-fill"></i> Senha do Administrador
             </h3>
             <p>Esta senha será usada juntamente com o e-mail cadastrado para acessar este painel administrativo.</p>
             <div class="form-group">
@@ -56,7 +56,7 @@
                 <i class="bi bi-x-lg"></i> Cancelar
             </a>
             <button type="submit" class="btn btn-primary mt-4">
-                <i class="bi bi-save-fill"></i> Cadastrar Usuário
+                <i class="bi bi-save-fill"></i> Cadastrar Administrador
             </button>
         </form>
     </div>
