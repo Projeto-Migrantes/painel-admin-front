@@ -4,7 +4,7 @@ import institutionController from '../controller/institutionController.js'
 import termController from "../controller/termController.js";
 import checkAuth from "../middlewares/checkAuth.js";
 import dashboardController from "../controller/dashboardController.js";
-import userController from "../controller/userController.js";
+import administradorController from "../controller/administratorController.js";
 import checkAuthAdmin from '../middlewares/checkAuthAdmin.js';
 
 const router = Router();
@@ -31,18 +31,18 @@ router.post('/migrants/change-password', checkAuth.auth, migrantController.getUp
 router.post('/migrants/updatePassword', checkAuth.auth, migrantController.updatePassword);
 
 // Rotas usuários
-router.post('/users/check-email', checkAuth.auth, userController.checkEmail);
-router.get('/users', checkAuth.auth, checkAuthAdmin.isAdmin, userController.getUsers);
-router.post('/users/delete', checkAuth.auth, checkAuthAdmin.isAdmin, userController.deleteUser);
-router.post('/users/edit', checkAuth.auth, checkAuthAdmin.isAdmin, userController.getEditUserForm);
-router.post('/users/update', checkAuth.auth, checkAuthAdmin.isAdmin, userController.updateUser);
-router.post('/users/create', checkAuth.auth, checkAuthAdmin.isAdmin, userController.createUser);
-router.get('/user/register', checkAuth.auth, checkAuthAdmin.isAdmin, userController.getRegisterUser);
-router.post('/users/change-password', checkAuth.auth, checkAuthAdmin.isAdmin, userController.getUpdatePassword);
-router.post('/users/updatePassword', checkAuth.auth, checkAuthAdmin.isAdmin, userController.updatePassword);
+router.post('/users/check-email', checkAuth.auth, administradorController.checkEmail);
+router.get('/users', checkAuth.auth, checkAuthAdmin.isAdmin, administradorController.getUsers);
+router.post('/users/delete', checkAuth.auth, checkAuthAdmin.isAdmin, administradorController.deleteUser);
+router.post('/users/edit', checkAuth.auth, checkAuthAdmin.isAdmin, administradorController.getEditUserForm);
+router.post('/users/update', checkAuth.auth, checkAuthAdmin.isAdmin, administradorController.updateUser);
+router.post('/users/create', checkAuth.auth, checkAuthAdmin.isAdmin, administradorController.createUser);
+router.get('/user/register', checkAuth.auth, checkAuthAdmin.isAdmin, administradorController.getRegisterUser);
+router.post('/users/change-password', checkAuth.auth, checkAuthAdmin.isAdmin, administradorController.getUpdatePassword);
+router.post('/users/updatePassword', checkAuth.auth, checkAuthAdmin.isAdmin, administradorController.updatePassword);
 
 // Rotas instituições
-router.post('/institutions/check-email', checkAuth.auth, institutionController.checkEmail);
+router.get('/institutions/check-email', checkAuth.auth, institutionController.checkEmail);
 router.get('/institutions', checkAuth.auth, institutionController.getInstitutions);
 router.get('/institutions/search', checkAuth.auth, institutionController.searchInstitutions);
 router.post('/institutions/details', checkAuth.auth, institutionController.getInstitutionById);

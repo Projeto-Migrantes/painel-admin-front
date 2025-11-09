@@ -104,10 +104,9 @@ const handleEmailBlur = async (originalEmail) => {
 */
 const checkEmailAvailability = async (email) => {
     try {
-        const response = await fetch('/dashboard/institutions/check-email', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email: email })
+        // OpenAPI: institutions check-email is GET with query param
+        const response = await fetch(`/dashboard/institutions/check-email?email=${encodeURIComponent(email)}`, {
+            method: 'GET'
         });
 
         if (!response.ok) {

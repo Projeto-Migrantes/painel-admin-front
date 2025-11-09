@@ -1,12 +1,13 @@
-import { api } from '../config/config.js';
+import { api, apiWithToken } from '../config/config.js';
 
 /*
 *   Função que busca todas as instituições cadastradas na API e renderiza a página de listagem de instituições.
 */
 const getInstitutions = async (req, res) => {
     try {
-        const response = await api.get("/institutions");
-        const institutions = response.data.institutions;
+        const apiInstance = apiWithToken(req.session.token);
+        const response = await apiInstance.get("/institutions");
+        const institutions = response.data.data;
         res.render('institutions/institutionList', { institutions })
     } catch (error) {
         console.error('Erro ao buscar instituições:', error);
@@ -20,36 +21,49 @@ const getInstitutions = async (req, res) => {
 const createInstitution = async (req, res) => {
     const {
         name, cnpj, email, main_phone, secondary_phone, website,
-        institution_category, instagram, main_language, second_language,
-        link_maps, description_pt, description_en, description_fr,
-        description_es, service_hours_pt, service_hours_en, service_hours_fr,
+        institution_category, instagram,
+        link_maps, institution_description_pt, institution_description_en, institution_description_fr,
+        institution_description_es, service_hours_pt, service_hours_en,  service_hours_fr,
         service_hours_es, target_populations_pt, target_populations_en,
-        target_populations_fr, target_populations_es, requirements_restrictions_pt,
-        requirements_restrictions_en, requirements_restrictions_fr, requirements_restrictions_es,
+        target_populations_fr,  target_populations_es,  requirements_restrictions_pt,
+        requirements_restrictions_en,  requirements_restrictions_fr, requirements_restrictions_es,
         services_offered_pt, services_offered_en, services_offered_fr, services_offered_es,
-        service_costs_pt, service_costs_en, service_costs_fr, service_costs_es, cep,
-        street, neighborhood, city, state, numero, complemento, authorized,
-        responsible_role,  responsible_sector, responsible_position, responsible_name,
+        service_costs_pt, service_costs_en, service_costs_fr, service_costs_es, postal_code,
+        street, neighborhood, city,  state, numero,  complemento, responsible_user_name,
+        responsible_user_position, responsible_user_sector,  responsible_user_role, authorized
     } = req.body;
 
     // Função para garantir que os campos sejam null se não forem informados
     const ensureNull = (value) => (value === undefined || value === null || value === '') ? null : value;
 
     const institution = {
-        name: ensureNull(name),  cnpj: ensureNull(cnpj), email: ensureNull(email),
-        main_phone: ensureNull(main_phone), secondary_phone: ensureNull(secondary_phone),
-        site: ensureNull(website),  instagram: ensureNull(instagram), main_language: ensureNull(main_language),
-        second_language: ensureNull(second_language), link_maps: ensureNull(link_maps), address_number: ensureNull(numero),
-        address_complement: ensureNull(complemento), category_id: ensureNull(institution_category),
-        authorized: authorized === "on" ? true : false,
+        name: ensureNull(name), 
+        cnpj: ensureNull(cnpj),  
+        email: ensureNull(email),
+        main_phone: ensureNull(main_phone),  
+        secondary_phone: ensureNull(secondary_phone),
+        website: ensureNull(website), 
+        link_maps: ensureNull(link_maps),
+        address_number: ensureNull(numero), 
+        address_complement: ensureNull(complemento),
+        category_id: ensureNull(institution_category),
+        responsible_user_name: ensureNull(responsible_user_name),
+        responsible_user_sector: ensureNull(responsible_user_sector),
+        responsible_user_position: ensureNull(responsible_user_position),
+        responsible_user_role: ensureNull(responsible_user_role),
+        instagram: ensureNull(instagram),
+        consent: authorized === "on" ? true : false,
+        purpose: 'empty',
+        registration_data: Date.now(),
     };
 
     const institution_descriptions = {
-        description_pt: ensureNull(description_pt),
-        description_en: ensureNull(description_en),
-        description_fr: ensureNull(description_fr),
-        description_es: ensureNull(description_es),
-    };;
+        institution_description_pt: ensureNull(institution_description_pt),
+        institution_description_en: ensureNull(institution_description_en),
+        institution_description_fr: ensureNull(institution_description_fr),
+        institution_description_es: ensureNull(institution_description_es),
+    };
+
     const service_hours = {
         service_hours_pt: ensureNull(service_hours_pt),
         service_hours_en: ensureNull(service_hours_en),
@@ -57,7 +71,7 @@ const createInstitution = async (req, res) => {
         service_hours_es: ensureNull(service_hours_es),
     };
 
-    const target_population = {
+    const target_populations = {
         target_populations_pt: ensureNull(target_populations_pt),
         target_populations_en: ensureNull(target_populations_en),
         target_populations_fr: ensureNull(target_populations_fr),
@@ -86,34 +100,25 @@ const createInstitution = async (req, res) => {
     };
 
     const address = {
-        cep: ensureNull(cep),
+        postal_code: ensureNull(postal_code),
         street: ensureNull(street),
         neighborhood: ensureNull(neighborhood),
         city: ensureNull(city),
         state: ensureNull(state),
     };
 
-    const responsible_user = {
-        name: ensureNull(responsible_name),
-        position: ensureNull(responsible_position),
-        sector: ensureNull(responsible_sector),
-        role: ensureNull(responsible_role),
-    };
 
     const newData = {
         institution, address, institution_descriptions,
-        service_hours, target_population, requirements_restrictions,
-        services_offered, service_cost, responsible_user
+        service_hours, target_populations, requirements_restrictions,
+        services_offered, service_cost,
     };
-    console.log(newData);
-
 
     try {
-        const { data } = await api.post(`/institutions`, newData); 
+        const apiInstance = apiWithToken(req.session.token);
+        const response = await apiInstance.post(`/institutions`, newData);
+        const institutionId = response.data.data?.institution.id || response.data.institution?.id;
         
-    console.log("DATA: ", data);
-        const institutionId = data.institution.id;
-
         res.render('institutions/redirect', { institutionId });
     } catch (error) {
         console.error(error);
@@ -126,9 +131,10 @@ const createInstitution = async (req, res) => {
 */
 const searchInstitutions = async (req, res) => {
     try {
+        const apiInstance = apiWithToken(req.session.token);
         const query = req.query.query; 
-        const response = await api.get(`/institutions/search?q=${query}`);
-        const institutions = response.data.institutions;
+    const response = await apiInstance.get(`/institutions/search?q=${query}`);
+    const institutions = response.data.data || response.data.institutions;
 
         if(!institutions || institutions.length === 0){
             res.render('institutions/institutionList', { error: 'Nenhum resultado foi encontrado', institutions })
@@ -145,6 +151,7 @@ const searchInstitutions = async (req, res) => {
 */
 const getInstitutionById = async (req, res) => {
 
+    const apiInstance = apiWithToken(req.session.token);
     const institutionId =  req.body.institution_id;
     if (!institutionId) {
         console.error('ID da instituição não foi fornecido.');
@@ -152,9 +159,8 @@ const getInstitutionById = async (req, res) => {
     };
 
     try {
-        const response = await api.get(`/institutions/${institutionId}`);
-
-        const institution = response.data.institution;
+    const response = await apiInstance.get(`/institutions/${institutionId}`);
+    const institution = response.data.data || response.data.institution || null;
         if (!institution) {
             return res.status(404).send({ message: 'Instituição não encontrada.' });
         };
@@ -172,12 +178,14 @@ const getInstitutionById = async (req, res) => {
 const getEditInstitutionForm = async (req, res) => {
     const institutionId = req.body.institution_id; 
 
+    const apiInstance = apiWithToken(req.session.token);
     try {
-        const response = await api.get(`/institutions/${institutionId}`);
-        const responseCategories = await api.get('/categories');
+    const response = await apiInstance.get(`/institutions/${institutionId}`);
+    const responseCategories = await apiInstance.get('/categories');
 
-        const categories = responseCategories.data.categories;
-        const institution = response.data.institution;
+    // OpenAPI: categories are returned as { data: [categories] }
+    const categories = responseCategories.data.data || responseCategories.data.categories;
+    const institution = response.data.data || response.data.institution;
         
 
         if (!institution) {
@@ -196,70 +204,78 @@ const getEditInstitutionForm = async (req, res) => {
 */
 const updateInstitution = async (req, res) => {
     const institutionId = req.body.institution_id;
-
     const {
         name, cnpj, email, main_phone, secondary_phone, website,
-        institution_category, instagram, main_language, second_language,
-        link_maps, description_pt, description_en, description_fr,
-        description_es, service_hours_pt, service_hours_en,  service_hours_fr,
+        institution_category, instagram,
+        link_maps, institution_description_pt, institution_description_en, institution_description_fr,
+        institution_description_es, service_hours_pt, service_hours_en,  service_hours_fr,
         service_hours_es, target_populations_pt, target_populations_en,
         target_populations_fr,  target_populations_es,  requirements_restrictions_pt,
         requirements_restrictions_en,  requirements_restrictions_fr, requirements_restrictions_es,
         services_offered_pt, services_offered_en, services_offered_fr, services_offered_es,
-        service_costs_pt, service_costs_en, service_costs_fr, service_costs_es, cep,
-        street, neighborhood, city,  state, numero,  complemento, responsible_name,
-        responsible_position, responsible_sector,  responsible_role,
+        service_costs_pt, service_costs_en, service_costs_fr, service_costs_es, postal_code,
+        street, neighborhood, city,  state, numero,  complemento, responsible_user_name,
+        responsible_user_position, responsible_user_sector,  responsible_user_role,
     } = req.body;
 
     // Função para garantir que os campos sejam null se não forem informados
     const ensureNull = (value) => (value === undefined || value === null || value === '') ? null : value;
 
     const institution = {
-        name: ensureNull(name), cnpj: ensureNull(cnpj),  email: ensureNull(email),
-        main_phone: ensureNull(main_phone),  secondary_phone: ensureNull(secondary_phone),
-        website: ensureNull(website), institution_category: ensureNull(institution_category),
-        instagram: ensureNull(instagram), main_language: ensureNull(main_language),
-        second_language: ensureNull(second_language), link_maps: ensureNull(link_maps),
-        address_number: ensureNull(numero), address_complement: ensureNull(complemento),
+        name: ensureNull(name), 
+        cnpj: ensureNull(cnpj),  
+        email: ensureNull(email),
+        main_phone: ensureNull(main_phone),  
+        secondary_phone: ensureNull(secondary_phone),
+        website: ensureNull(website), 
+        institution_category: ensureNull(institution_category),
+        link_maps: ensureNull(link_maps),
+        address_number: ensureNull(numero), 
+        address_complement: ensureNull(complemento),
         category_id: ensureNull(institution_category),
+        responsible_user_name: ensureNull(responsible_user_name),
+        responsible_user_sector: ensureNull(responsible_user_sector),
+        responsible_user_position: ensureNull(responsible_user_position),
+        responsible_user_role: ensureNull(responsible_user_role),
+        instagram: ensureNull(instagram),
     };
 
-    const InstitutionDescription = {
-        description_pt: ensureNull(description_pt),
-        description_en: ensureNull(description_en),
-        description_fr: ensureNull(description_fr),
-        description_es: ensureNull(description_es),
+    const institution_descriptions = {
+        institution_description_pt: ensureNull(institution_description_pt),
+        institution_description_en: ensureNull(institution_description_en),
+        institution_description_fr: ensureNull(institution_description_fr),
+        institution_description_es: ensureNull(institution_description_es),
     };
 
-    const ServiceHour = {
+    const service_hours = {
         service_hours_pt: ensureNull(service_hours_pt),
         service_hours_en: ensureNull(service_hours_en),
         service_hours_fr: ensureNull(service_hours_fr),
         service_hours_es: ensureNull(service_hours_es),
     };
 
-    const TargetPopulation = {
+    const target_populations = {
         target_populations_pt: ensureNull(target_populations_pt),
         target_populations_en: ensureNull(target_populations_en),
         target_populations_fr: ensureNull(target_populations_fr),
         target_populations_es: ensureNull(target_populations_es),
     };
 
-    const RequirementRestriction = {
+    const requirements_restrictions = {
         requirements_restrictions_pt: ensureNull(requirements_restrictions_pt),
         requirements_restrictions_en: ensureNull(requirements_restrictions_en),
         requirements_restrictions_fr: ensureNull(requirements_restrictions_fr),
         requirements_restrictions_es: ensureNull(requirements_restrictions_es),
     };
 
-    const ServicesOffered = {
+    const services_offered = {
         services_offered_pt: ensureNull(services_offered_pt),
         services_offered_en: ensureNull(services_offered_en),
         services_offered_fr: ensureNull(services_offered_fr),
         services_offered_es: ensureNull(services_offered_es),
     };
 
-    const ServiceCost = {
+    const service_cost = {
         services_costs_pt: ensureNull(service_costs_pt),
         services_costs_en: ensureNull(service_costs_en),
         services_costs_fr: ensureNull(service_costs_fr),
@@ -267,30 +283,24 @@ const updateInstitution = async (req, res) => {
     };
 
     const address = {
-        cep: ensureNull(cep),
+        postal_code: ensureNull(postal_code),
         street: ensureNull(street),
         neighborhood: ensureNull(neighborhood),
         city: ensureNull(city),
         state: ensureNull(state),
     };
 
-    const ResponsibleUser = {
-        name: ensureNull(responsible_name),
-        position: ensureNull(responsible_position),
-        sector: ensureNull(responsible_sector),
-        role: ensureNull(responsible_role)
-    };
 
     const newData = {
-        institution, address, InstitutionDescription,
-        ServiceHour, TargetPopulation, RequirementRestriction,
-        ServicesOffered, ServiceCost, ResponsibleUser
+        institution, address, institution_descriptions,
+        service_hours, target_populations, requirements_restrictions,
+        services_offered, service_cost,
     };
 
 
     try {
-        await api.put(`/institutions/${institutionId}`, newData); 
-       
+        const apiInstance = apiWithToken(req.session.token);
+        await apiInstance.patch(`/institutions/${institutionId}`, newData); 
         res.render('institutions/redirect', { institutionId });
     } catch (error) {
         console.error(error);
@@ -303,8 +313,9 @@ const updateInstitution = async (req, res) => {
 */
 const deleteInstitution = async (req, res) => {
     try {
+        const apiInstance = apiWithToken(req.session.token);
         const institutiontId = req.body.institution_id; 
-        await api.delete(`/institutions/${institutiontId}`);
+        await apiInstance.delete(`/institutions/${institutiontId}`);
         
         res.redirect('/dashboard/institutions'); 
     } catch (error) {
@@ -318,8 +329,9 @@ const deleteInstitution = async (req, res) => {
 */
 const getRegisterInstitution = async (req, res) => {
     try {
-        const responseCategories = await api.get('/categories');
-        const categories = responseCategories.data.categories;
+        const apiInstance = apiWithToken(req.session.token);
+        const responseCategories = await apiInstance.get('/categories');
+        const categories = responseCategories.data.data || responseCategories.data.categories;
         res.render('institutions/institutionCreate', { categories }); 
     } catch (error) {
         console.error(error);
@@ -333,9 +345,10 @@ const getRegisterInstitution = async (req, res) => {
 */
 const checkEmail = async (req, res) => {
     try {
-        const email = req.body.email;
-        const emailExistResponse = await api.post('/institutions/check-email', { email });
-        const exists = emailExistResponse.data.exists;
+        const apiInstance = apiWithToken(req.session.token);
+        const email = req.query.email || req.body.email;
+        const emailExistResponse = await apiInstance.get(`/institutions/check-email?email=${email}`);
+        const exists = emailExistResponse.data.exists || emailExistResponse.data.data?.exists;
         
         if (exists) {
             return res.status(200).json({ exists: true });

@@ -1,4 +1,4 @@
-import { api } from '../config/config.js';
+import { api, apiWithToken } from '../config/config.js';
 import jwt from 'jsonwebtoken';
 
 /*
@@ -7,10 +7,8 @@ import jwt from 'jsonwebtoken';
 const login = async (req, res) => {
     const { username, password } = req.body;
     try {
-        const response = await api.post('/login', { username, password });
-        const authHeader = response.headers['authorization'];
-        const token = authHeader && authHeader.split(' ')[1];
-
+    const response = await api.post('/auth/admins/login', { email: username, password });
+    const token = response.data.token || response.data.data?.token;
         if (token) {
             try {
                 const decodedToken = jwt.verify(token, process.env.JWT_SECRET); 
@@ -29,10 +27,11 @@ const login = async (req, res) => {
         return res.render('login', { error: "Token inválido. Tente novamente." });
     } catch (error) {
 
-        if(error.status === 401){
+        if(error.status === 403 || error.status === 401){
         return res.render('login', { error: 'Credenciais inválidas' });
         };         
 
+        console.log(error);
         return res.render('login', { error: 'Ocorreu um erro na autenticação. Tente novamente mais tarde.' });
     };
 };
@@ -66,17 +65,19 @@ const getLogin = (req, res) => {
 */
 const getHome = async (req, res) => {
     try {
-        const institutionResponse = await api.get('/institutions-count');
-        const institutionCount = institutionResponse.data.count;
+        const apiInstance = apiWithToken(req.session.token);
 
-        const migrantResponse = await api.get('/migrants-count');
-        const migrantCount = migrantResponse.data.count;
+    const institutionResponse = await apiInstance.get('/institutions/count');
+    const institutionCount = institutionResponse.data.count || institutionResponse.data.data?.count || 0;
 
-        const pendingFormsResponse = await api.get('/forms-count/unread');
-        const pendingFormsCount = pendingFormsResponse.data.count;
+    const migrantResponse = await apiInstance.get('/migrants/count');
+    const migrantCount = migrantResponse.data.count || migrantResponse.data.data?.count || 0;
 
-        const userCountResponse = await api.get('/users-count');
-        const userCount = userCountResponse.data.count;
+    const pendingFormsResponse = await apiInstance.get('/forms/count-unread');
+    const pendingFormsCount = pendingFormsResponse.data.count || pendingFormsResponse.data.data?.count || 0;
+
+    const userCountResponse = await apiInstance.get('/users/count');
+    const userCount = userCountResponse.data.count || userCountResponse.data.data?.count || 0;
 
         res.render('home', { institutionCount, migrantCount, pendingFormsCount, userCount });
     } catch (error) {
@@ -90,10 +91,12 @@ const getHome = async (req, res) => {
 */
 const getManual = async (req, res) => {
     try {
-        const response = await api.get('/pdfs');
-        const pdfs = response.data.pdfs;
+    // OpenAPI: list migrant manuals under /migrant-manuals
+    const apiInstance = apiWithToken(req.session.token);
+    const response = await apiInstance.get('/migrant-manuals');
+    const pdfs = response.data.data || response.data.pdfs || [];
 
-        res.render('manual', { pdfs });
+    res.render('manual', { pdfs });
     } catch (error) {
         console.error('Erro ao buscar o manual:', error);
         res.status(500).render('error', { message: 'Erro ao carregar o manual' });        
@@ -113,9 +116,14 @@ const updateManual = async (req, res) => {
         const language = req.body.language;
         const updatePdf = { name, description, url, language };
 
-        await api.put(`/pdfs/${pdf_id}`, updatePdf);
+        const apiInstance = apiWithToken(req.session.token);
+        const updateResponse = await apiInstance.patch(`/migrant-manuals/${pdf_id}`, updatePdf);
 
-        req.flash('successMessage', 'Manual do Migrante atualizado com sucesso!');
+        if (updateResponse.status === 200 || updateResponse.status === 204) {
+            req.flash('successMessage', 'Manual do Migrante atualizado com sucesso!');
+        } else {
+            req.flash('errorMessage', 'Erro ao atualizar o manual.');
+        }
         res.redirect('/dashboard/manual-migrante');  
     } catch (error) {
         console.error('Erro ao atualizar o manual:', error);

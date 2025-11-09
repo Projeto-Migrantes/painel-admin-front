@@ -102,23 +102,23 @@ const handleEmailBlur = async () => {
 */
 const checkEmailAvailability = async (email) => {
     try {
-        const response = await fetch('/dashboard/institutions/check-email', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email: email })
+        const response = await fetch(`/dashboard/institutions/check-email?email=${encodeURIComponent(email)}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        },
         });
 
         if (!response.ok) {
-            console.error('Erro na requisição:', response.statusText);
-            throw new Error('Erro na requisição');
-        };
-        
-        const data = await response.json();
+        console.error("Erro na requisição:", response.statusText);
+        throw new Error("Erro na requisição");
+        }
 
-        return data;
+        const data = await response.json();
+        return data; // { exists: true/false }
     } catch (error) {
-        console.error('Erro ao verificar o e-mail:', error);
-    };
+        console.error("Erro ao verificar o e-mail:", error);
+    }
 };
 
 

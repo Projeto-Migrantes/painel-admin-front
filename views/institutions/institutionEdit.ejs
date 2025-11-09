@@ -33,7 +33,7 @@
                 </div>
                 <div class="form-group">
                     <label for="website">Site</label>
-                    <input type="text" class="form-control" id="website" name="website" placeholder="Site" value="<%= institution.site %>" maxlength="500">
+                    <input type="text" class="form-control" id="website" name="website" placeholder="Site" value="<%= institution.website %>" maxlength="500">
                 </div>
                 <div class="form-group">
                     <label for="institution_category">Categoria*</label>
@@ -41,7 +41,7 @@
                         <option value="" disabled selected>Selecione uma categoria</option>
                         <% categories.forEach(category => { %>
                             <% if (category.category_pt !== "Todas Categorias") { %>
-                                <option value="<%= category.id %>" <%= institution.Category.id === category.id ? 'selected' : '' %>><%= category.category_pt %></option>
+                                <option value="<%= category.id %>" <%= institution.category.id === category.id ? 'selected' : '' %>><%= category.category_pt %></option>
                             <% } %>
                         <% }); %>
                     </select>
@@ -50,14 +50,14 @@
                     <label for="instagram">Instagram</label>
                     <input type="text" class="form-control" id="instagram" name="instagram" placeholder="Instagram" oninput="formatInstagramUsername(this)"  value="<%= institution.instagram %>" maxlength="70">
                 </div>
-                <div class="form-group">
+                <!-- <div class="form-group">
                     <label for="main_language">Idioma Principal*</label>
                     <input type="text" class="form-control" id="main_language" name="main_language" placeholder="Idioma Principal" required value="<%= institution.main_language %>" maxlength="80">
                 </div>
                 <div class="form-group">
                     <label for="second_language">Idioma Secundário*</label>
                     <input type="text" class="form-control" id="second_language" placeholder="Idioma Secundário" name="second_language" required value="<%= institution.second_language %>" maxlength="80">
-                </div>
+                </div> -->
                 <div class="form-group">
                     <label for="link_maps">Link do Maps*</label>
                     <input type="text" class="form-control" id="link_maps" placeholder="Link do Maps" name="link_maps" required value="<%= institution.link_maps %>" maxlength="1000">
@@ -66,148 +66,148 @@
                     <i class="bi bi-postcard-fill"></i> Descrição da Instituição
                 </h3>
                 <div class="form-group">
-                    <label for="description_pt">Descrição (Português)</label>
-                    <textarea class="form-control" id="description_pt" maxlength="255" required name="description_pt" rows="3" placeholder="Descrição da instituição em português..."><%= institution.InstitutionDescription.description_pt %></textarea>
+                    <label for="institution_description_pt">Descrição (Português)</label>
+                    <textarea class="form-control" id="institution_description_pt" maxlength="255" required name="institution_description_pt" rows="3" placeholder="Descrição da instituição em português..."><%= institution.institution_descriptions.institution_description_pt %></textarea>
                 </div>
                 <div class="form-group">
-                    <label for="description_en">Descrição (Inglês)</label>
-                    <textarea class="form-control" id="description_en" maxlength="255" required name="description_en" rows="3" placeholder="Institution description in English..."><%= institution.InstitutionDescription.description_en %></textarea>
+                    <label for="institution_description_en">Descrição (Inglês)</label>
+                    <textarea class="form-control" id="institution_description_en" maxlength="255" required name="institution_description_en" rows="3" placeholder="Institution description in English..."><%= institution.institution_descriptions.institution_description_en %></textarea>
                 </div>
                 <div class="form-group">
-                    <label for="description_fr">Descrição (Francês)</label>
-                    <textarea class="form-control" id="description_fr" maxlength="255" required name="description_fr" rows="3" placeholder="Description de l'institution en français..."><%= institution.InstitutionDescription.description_fr %></textarea>
+                    <label for="institution_description_fr">Descrição (Francês)</label>
+                    <textarea class="form-control" id="institution_description_fr" maxlength="255" required name="institution_description_fr" rows="3" placeholder="Description de l'institution en français..."><%= institution.institution_descriptions.institution_description_fr %></textarea>
                 </div>
                 <div class="form-group">
-                    <label for="description_es">Descrição (Espanhol)</label>
-                    <textarea class="form-control" id="description_es" maxlength="255" required name="description_es" rows="3" placeholder="Descripción de la institución en español..."><%= institution.InstitutionDescription.description_es %></textarea>
+                    <label for="institution_description_es">Descrição (Espanhol)</label>
+                    <textarea class="form-control" id="institution_description_es" maxlength="255" required name="institution_description_es" rows="3" placeholder="Descripción de la institución en español..."><%= institution.institution_descriptions.institution_description_es %></textarea>
                 </div><br><hr>
                 <h3 class="mt-4 text-primary"> 
                     <i class="bi bi-clock-fill"></i> Dias e Horários de Funcionamento
                 </h3>
                 <div class="form-group">
                     <label for="service_hours_pt">Dias e Horários de Funcionamento (Português)</label>
-                    <textarea class="form-control" id="service_hours_pt" maxlength="255" required name="service_hours_pt" rows="3" placeholder="Dias e Horários em português..."><%= institution.ServiceHour.service_hours_pt %></textarea>
+                    <textarea class="form-control" id="service_hours_pt" maxlength="255" required name="service_hours_pt" rows="3" placeholder="Dias e Horários em português..."><%= institution.service_hours.service_hours_pt %></textarea>
                 </div>
                 <div class="form-group">
                     <label for="service_hours_en">Dias e Horários de Funcionamento (Inglês)</label>
-                    <textarea class="form-control" id="service_hours_en" maxlength="255" required name="service_hours_en" rows="3" placeholder="Service hours in English..."><%= institution.ServiceHour.service_hours_en %></textarea>
+                    <textarea class="form-control" id="service_hours_en" maxlength="255" required name="service_hours_en" rows="3" placeholder="Service hours in English..."><%= institution.service_hours.service_hours_en %></textarea>
                 </div>
                 <div class="form-group">
                     <label for="service_hours_fr">Dias e Horários de Funcionamento (Francês)</label>
-                    <textarea class="form-control" id="service_hours_fr" maxlength="255" required name="service_hours_fr" rows="3" placeholder="Horaires d'ouverture en français..."><%= institution.ServiceHour.service_hours_fr %></textarea>
+                    <textarea class="form-control" id="service_hours_fr" maxlength="255" required name="service_hours_fr" rows="3" placeholder="Horaires d'ouverture en français..."><%= institution.service_hours.service_hours_fr %></textarea>
                 </div>
                 <div class="form-group">
                     <label for="service_hours_es">Dias e Horários de Funcionamento (Espanhol)</label>
-                    <textarea class="form-control" id="service_hours_es" maxlength="255" required name="service_hours_es" rows="3" placeholder="Horario de atención en español..."><%= institution.ServiceHour.service_hours_es %></textarea>
+                    <textarea class="form-control" id="service_hours_es" maxlength="255" required name="service_hours_es" rows="3" placeholder="Horario de atención en español..."><%= institution.service_hours.service_hours_es %></textarea>
                 </div><br><hr>
                 <h3 class="mt-4 text-primary">
                     <i class="bi bi-people-fill"></i> População Alvo
                 </h3>
                 <div class="form-group">
                     <label for="target_populations_pt">População Alvo (Português)</label>
-                    <textarea class="form-control" id="target_populations_pt" maxlength="255"required name="target_populations_pt" rows="3" placeholder="População alvo em português..."><%= institution.TargetPopulation.target_populations_pt %></textarea>
+                    <textarea class="form-control" id="target_populations_pt" maxlength="255"required name="target_populations_pt" rows="3" placeholder="População alvo em português..."><%= institution.target_populations.target_populations_pt %></textarea>
                 </div>
                 <div class="form-group">
                     <label for="target_populations_en">População Alvo (Inglês)</label>
-                    <textarea class="form-control" id="target_populations_en" maxlength="255" required name="target_populations_en" rows="3" placeholder="Target population in English..."><%= institution.TargetPopulation.target_populations_en %></textarea>
+                    <textarea class="form-control" id="target_populations_en" maxlength="255" required name="target_populations_en" rows="3" placeholder="Target population in English..."><%= institution.target_populations.target_populations_en %></textarea>
                 </div>
                 <div class="form-group">
                     <label for="target_populations_fr">População Alvo (Francês)</label>
-                    <textarea class="form-control" id="target_populations_fr" maxlength="255" required name="target_populations_fr" rows="3" placeholder="Population cible en français..."><%= institution.TargetPopulation.target_populations_fr %></textarea>
+                    <textarea class="form-control" id="target_populations_fr" maxlength="255" required name="target_populations_fr" rows="3" placeholder="Population cible en français..."><%= institution.target_populations.target_populations_fr %></textarea>
                 </div>
                 <div class="form-group">
                     <label for="target_populations_es">População Alvo (Espanhol)</label>
-                    <textarea class="form-control" id="target_populations_es" maxlength="255" required name="target_populations_es" rows="3" placeholder="Población objetivo en español..."><%= institution.TargetPopulation.target_populations_es %></textarea>
+                    <textarea class="form-control" id="target_populations_es" maxlength="255" required name="target_populations_es" rows="3" placeholder="Población objetivo en español..."><%= institution.target_populations.target_populations_es %></textarea>
                 </div><br><hr>
                 <h3 class="mt-4 text-primary">
                     <i class="bi bi-check-circle-fill"></i> Requisitos e Restrições
                 </h3>
                 <div class="form-group">
                     <label for="requirements_restrictions_pt">Requisitos e Restrições (Português)</label>
-                    <textarea class="form-control" id="requirements_restrictions_pt" maxlength="255" required name="requirements_restrictions_pt" rows="3" placeholder="Requisitos e restrições em português..."><%= institution.RequirementRestriction.requirements_restrictions_pt %></textarea>
+                    <textarea class="form-control" id="requirements_restrictions_pt" maxlength="255" required name="requirements_restrictions_pt" rows="3" placeholder="Requisitos e restrições em português..."><%= institution.requirement_restriction.requirements_restrictions_pt %></textarea>
                 </div>
                 <div class="form-group">
                     <label for="requirements_restrictions_en">Requisitos e Restrições (Inglês)</label>
-                    <textarea class="form-control" id="requirements_restrictions_en" maxlength="255" required name="requirements_restrictions_en" rows="3" placeholder="Requirements and restrictions in English..."><%= institution.RequirementRestriction.requirements_restrictions_en %></textarea>
+                    <textarea class="form-control" id="requirements_restrictions_en" maxlength="255" required name="requirements_restrictions_en" rows="3" placeholder="Requirements and restrictions in English..."><%= institution.requirement_restriction.requirements_restrictions_en %></textarea>
                 </div>
                 <div class="form-group">
                     <label for="requirements_restrictions_fr">Requisitos e Restrições (Francês)</label>
-                    <textarea class="form-control" id="requirements_restrictions_fr" maxlength="255" required name="requirements_restrictions_fr" rows="3" placeholder="Exigences et restrictions en français..."><%= institution.RequirementRestriction.requirements_restrictions_fr %></textarea>
+                    <textarea class="form-control" id="requirements_restrictions_fr" maxlength="255" required name="requirements_restrictions_fr" rows="3" placeholder="Exigences et restrictions en français..."><%= institution.requirement_restriction.requirements_restrictions_fr %></textarea>
                 </div>
                 <div class="form-group">
                     <label for="requirements_restrictions_es">Requisitos e Restrições (Espanhol)</label>
-                    <textarea class="form-control" id="requirements_restrictions_es" maxlength="255" required name="requirements_restrictions_es" rows="3" placeholder="Requisitos y restricciones en español..."><%= institution.RequirementRestriction.requirements_restrictions_es %></textarea>
+                    <textarea class="form-control" id="requirements_restrictions_es" maxlength="255" required name="requirements_restrictions_es" rows="3" placeholder="Requisitos y restricciones en español..."><%= institution.requirement_restriction.requirements_restrictions_es %></textarea>
                 </div><br><hr>
                 <h3 class="mt-4 text-primary">
                     <i class="bi bi-box-fill"></i> Serviços Oferecidos
                 </h3>
                 <div class="form-group">
                     <label for="services_offered_pt">Serviços Oferecidos (Português)</label>
-                    <textarea class="form-control" id="services_offered_pt" maxlength="255" required name="services_offered_pt" rows="3" placeholder="Serviços oferecidos em português..."><%= institution.ServicesOffered.services_offered_pt %></textarea>
+                    <textarea class="form-control" id="services_offered_pt" maxlength="255" required name="services_offered_pt" rows="3" placeholder="Serviços oferecidos em português..."><%= institution.services_offered.services_offered_pt %></textarea>
                 </div>
                 <div class="form-group">
                     <label for="services_offered_en">Serviços Oferecidos (Inglês)</label>
-                    <textarea class="form-control" id="services_offered_en" maxlength="255" required name="services_offered_en" rows="3" placeholder="Services offered in English..."><%= institution.ServicesOffered.services_offered_en %></textarea>
+                    <textarea class="form-control" id="services_offered_en" maxlength="255" required name="services_offered_en" rows="3" placeholder="Services offered in English..."><%= institution.services_offered.services_offered_en %></textarea>
                 </div>
                 <div class="form-group">
                     <label for="services_offered_fr">Serviços Oferecidos (Francês)</label>
-                    <textarea class="form-control" id="services_offered_fr" maxlength="255" required name="services_offered_fr" rows="3" placeholder="Services offerts en français..."><%= institution.ServicesOffered.services_offered_fr %></textarea>
+                    <textarea class="form-control" id="services_offered_fr" maxlength="255" required name="services_offered_fr" rows="3" placeholder="Services offerts en français..."><%= institution.services_offered.services_offered_fr %></textarea>
                 </div>
                 <div class="form-group">
                     <label for="services_offered_es">Serviços Oferecidos (Espanhol)</label>
-                    <textarea class="form-control" id="services_offered_es" maxlength="255" required name="services_offered_es" rows="3" placeholder="Servicios ofrecidos en español..."><%= institution.ServicesOffered.services_offered_es %></textarea>
+                    <textarea class="form-control" id="services_offered_es" maxlength="255" required name="services_offered_es" rows="3" placeholder="Servicios ofrecidos en español..."><%= institution.services_offered.services_offered_es %></textarea>
                 </div><br><hr>
                 <h3 class="mt-4 text-primary">
                     <i class="bi bi-currency-dollar"></i> Custos dos Serviços
                 </h3>
                 <div class="form-group">
                     <label for="service_costs_pt">Custos dos Serviços (Português)</label>
-                    <textarea class="form-control" id="service_costs_pt" maxlength="255" required name="service_costs_pt" rows="3" placeholder="Custos dos serviços em português..."><%= institution.ServiceCost.services_costs_pt %></textarea>
+                    <textarea class="form-control" id="service_costs_pt" maxlength="255" required name="service_costs_pt" rows="3" placeholder="Custos dos serviços em português..."><%= institution.service_cost.services_costs_pt %></textarea>
                 </div>
                 <div class="form-group">
                     <label for="service_costs_en">Custos dos Serviços (Inglês)</label>
-                    <textarea class="form-control" id="service_costs_en" maxlength="255" required name="service_costs_en" rows="3" placeholder="Service costs in English..."><%= institution.ServiceCost.services_costs_en %></textarea>
+                    <textarea class="form-control" id="service_costs_en" maxlength="255" required name="service_costs_en" rows="3" placeholder="Service costs in English..."><%= institution.service_cost.services_costs_en %></textarea>
                 </div>
                 <div class="form-group">
                     <label for="service_costs_fr">Custos dos Serviços (Francês)</label>
-                    <textarea class="form-control" id="service_costs_fr" maxlength="255" required name="service_costs_fr" rows="3" placeholder="Coûts des services en français..."><%= institution.ServiceCost.services_costs_fr %></textarea>
+                    <textarea class="form-control" id="service_costs_fr" maxlength="255" required name="service_costs_fr" rows="3" placeholder="Coûts des services en français..."><%= institution.service_cost.services_costs_fr %></textarea>
                 </div>
                 <div class="form-group">
                     <label for="service_costs_es">Custos dos Serviços (Espanhol)</label>
-                    <textarea class="form-control" id="service_costs_es" maxlength="255" required name="service_costs_es" rows="3" placeholder="Costos de los servicios en español..."><%= institution.ServiceCost.services_costs_es %></textarea>
+                    <textarea class="form-control" id="service_costs_es" maxlength="255" required name="service_costs_es" rows="3" placeholder="Costos de los servicios en español..."><%= institution.service_cost.services_costs_es %></textarea>
                 </div><br><hr>
                 <h3 class="mt-4 text-primary">
                     <i class="bi bi-geo-alt-fill"></i> Endereço
                 </h3>
                 <div class="form-group">
-                    <label for="cep">CEP*</label>
-                    <input type="text" class="form-control" id="cep" maxlength="9" name="cep" oninput="formatCEP(this)" required value="<%= institution.Address && institution.Address.cep %>" placeholder="Digite o CEP">
+                    <label for="postal_code">CEP*</label>
+                    <input type="text" class="form-control" id="postal_code" maxlength="9" name="postal_code" oninput="formatCEP(this)" required value="<%= institution.address && institution.address.postal_code %>" placeholder="Digite o CEP">
                     <button type="button" id="btnBuscarEndereco" class="btn btn-primary mt-2">Buscar Endereço</button>
                 </div>
 
                 <div class="form-group">
                     <label for="street">Logradouro*</label>
-                    <input type="text" class="form-control" id="street" required maxlength="255" name="street" value="<%= institution.Address && institution.Address.street %>" placeholder="Digite o Logradouro">
+                    <input type="text" class="form-control" id="street" required maxlength="255" name="street" value="<%= institution.address && institution.address.street %>" placeholder="Digite o Logradouro">
                 </div>
                 <div class="form-group">
                     <label for="neighborhood">Bairro*</label>
-                    <input type="text" class="form-control" id="neighborhood" required maxlength="255" name="neighborhood" value="<%= institution.Address && institution.Address.neighborhood %>" placeholder="Digite o Bairro">
+                    <input type="text" class="form-control" id="neighborhood" required maxlength="255" name="neighborhood" value="<%= institution.address && institution.address.neighborhood %>" placeholder="Digite o Bairro">
                 </div>
                 <div class="form-group">
                     <label for="city">Cidade*</label>
-                    <input type="text" class="form-control" id="city" required name="city" maxlength="150" value="<%= institution.Address && institution.Address.city %>" placeholder="Digite a Cidade">
+                    <input type="text" class="form-control" id="city" required name="city" maxlength="150" value="<%= institution.address && institution.address.city %>" placeholder="Digite a Cidade">
                 </div>
                 <div class="form-group">
                     <label for="state">Estado*</label>
-                    <input type="text" class="form-control" id="state" required name="state" maxlength="150" value="<%= institution.Address && institution.Address.state %>" placeholder="Digite o Estado">
+                    <input type="text" class="form-control" id="state" required name="state" maxlength="150" value="<%= institution.address && institution.address.state %>" placeholder="Digite o Estado">
                 </div>
                 <div class="form-group">
                     <label for="numero">Número do Endereço*</label>
-                    <input type="text" class="form-control" id="numero" required name="numero" maxlength="10" required value="<%= institution.Address && institution.address_number %>" placeholder="Digite o Número">
+                    <input type="text" class="form-control" id="numero" required name="numero" maxlength="10" required value="<%= institution.address && institution.address_number %>" placeholder="Digite o Número">
                 </div>
                 <div class="form-group">
                     <label for="complemento">Complemento (opcional)</label>
-                    <input type="text" class="form-control" id="complemento" maxlength="240" name="complemento" value="<%= institution.Address && institution.address_complement %>" placeholder="Digite o Complemento">
+                    <input type="text" class="form-control" id="complemento" maxlength="240" name="complemento" value="<%= institution.address && institution.address_complement %>" placeholder="Digite o Complemento">
                 </div>
 
                 <div class="alert alert-warning" role="alert">
@@ -217,23 +217,23 @@
                     <i class="bi bi-person-fill"></i> Responsável Pelo Cadastro
                 </h3>
                 <div class="form-group">
-                    <label for="responsible_name">Nome do Responsável*</label>
-                    <input type="text" class="form-control" maxlength="255" id="responsible_name" value="<%= institution.ResponsibleUser && institution.ResponsibleUser.name %>" name="responsible_name" required placeholder="Digite o nome do responsável">
+                    <label for="responsible_user_name">Nome do Responsável*</label>
+                    <input type="text" class="form-control" maxlength="255" id="responsible_user_name" value="<%= institution.responsible_user_name %>" name="responsible_user_name" required placeholder="Digite o nome do responsável">
                 </div>
 
                 <div class="form-group">
-                    <label for="responsible_position">Posição*</label>
-                    <input type="text" class="form-control" maxlength="80" required id="responsible_position" value="<%= institution.ResponsibleUser && institution.ResponsibleUser.position %>" name="responsible_position" placeholder="Digite a posição do responsável">
+                    <label for="responsible_user_position">Posição*</label>
+                    <input type="text" class="form-control" maxlength="80" required id="responsible_user_position" value="<%= institution.responsible_user_position %>" name="responsible_user_position" placeholder="Digite a posição do responsável">
                 </div>
 
                 <div class="form-group">
-                    <label for="responsible_sector">Setor*</label>
-                    <input type="text" class="form-control" maxlength="80" required id="responsible_sector" value="<%= institution.ResponsibleUser && institution.ResponsibleUser.sector %>" name="responsible_sector" placeholder="Digite o setor do responsável">
+                    <label for="responsible_user_sector">Setor*</label>
+                    <input type="text" class="form-control" maxlength="80" required id="responsible_user_sector" value="<%= institution.responsible_user_sector %>" name="responsible_user_sector" placeholder="Digite o setor do responsável">
                 </div>
 
                 <div class="form-group">
-                    <label for="responsible_role">Função*</label>
-                    <input type="text" class="form-control" maxlength="80" required id="responsible_role" value="<%= institution.ResponsibleUser && institution.ResponsibleUser.role%>" name="responsible_role" placeholder="Digite a função do responsável">
+                    <label for="responsible_user_role">Função*</label>
+                    <input type="text" class="form-control" maxlength="80" required id="responsible_user_role" value="<%= institution.responsible_user_role %>" name="responsible_user_role" placeholder="Digite a função do responsável">
                 </div>
 
                 <br>

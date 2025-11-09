@@ -1,12 +1,13 @@
-import { api } from '../config/config.js';
+import { apiWithToken, api} from '../config/config.js';
 
 /*
 *   Função para buscar todos os migrantes cadastrados na API e renderizar a página de listagem.
 */
 const getMigrants = async (req, res) => {
     try {
-        const response = await api.get("/migrants");
-        const migrants = response.data.migrants;
+    const apiInstance = apiWithToken(req.session.token);
+    const response = await apiInstance.get("/migrants");
+    const migrants = response.data.data;
 
         res.render('migrants/migrantsList', { migrants });
     } catch (error) {
@@ -21,7 +22,8 @@ const getMigrants = async (req, res) => {
 const deleteMigrant = async (req, res) => {
     const migrantId = req.body.migrant_id; 
     try {
-        await api.delete(`/migrants/${migrantId}`);
+        const apiInstance = apiWithToken(req.session.token);
+        await apiInstance.delete(`/migrants/${migrantId}`);
         
         res.redirect('/dashboard/migrants'); 
     } catch (error) {
@@ -37,12 +39,13 @@ const getMigrantById = async (req, res) => {
     const migrantId = req.body.migrant_id; 
 
     try {
-        const response = await api.get(`/migrants/${migrantId}`);
-        const migrant = response.data.migrant;
+        const apiInstance = apiWithToken(req.session.token);
+        const response = await apiInstance.get(`/migrants/${migrantId}`);
+        const migrant = response.data.data || response.data || null;
 
-        if (!migrant) {
-            return res.status(404).send({ message: 'Migrante não encontrado.' });
-        };
+            if (!migrant) {
+                return res.status(404).send({ message: 'Migrante não encontrado.' });
+            };
 
         res.render('migrants/migrantDetails', { migrant });
     } catch (error) {
@@ -57,65 +60,85 @@ const getMigrantById = async (req, res) => {
 */
 const createMigrant = async (req, res) => {
     const {
-        full_name, social_name, email, phone, whatsapp_number,
-        document_type, document_identification, date_birth,
-        preferred_language, entry_date, migrant_reason,
-        gender, other_gender, nationality, marital_status,
-        education_level, social_program_access, status_migratory,
-        is_pcd, cep, street, neighborhood, city, state, numero,
-        complemento, password, authorized,
+        full_name,
+        social_name,
+        email,
+        phone_number,
+        crnm,
+        date_of_birth,
+        language_preference,
+        entry_into_brazil,
+        migration_reason,
+        gender,
+        other_gender,
+        country_of_origin,
+        marital_status,
+        literacy_level,
+        postal_code,
+        street,
+        neighborhood,
+        city,
+        state,
+        address_number,
+        address_complement,
+        password,
+        authorized,
     } = req.body;
 
-    // Função para garantir que os campos sejam null se não forem informados
-    const ensureNull = (value) => (value === undefined || value === null || value === '') ? null : value;
+    const ensureNull = (value) =>
+        value === undefined || value === null || value === "" ? null : value;
 
     const migrant = {
-        full_name: ensureNull(full_name), social_name: ensureNull(social_name),
-        email: ensureNull(email), phone: ensureNull(phone),
-        whatsapp_number: ensureNull(whatsapp_number) || false,  
-        date_birth: ensureNull(date_birth), entry_date: ensureNull(entry_date),
-        preferred_language: ensureNull(preferred_language),
-        migrant_reason: ensureNull(migrant_reason),
-        gender: gender === 'Outro' ? other_gender : gender,
-        nationality: ensureNull(nationality), marital_status: ensureNull(marital_status),
-        education_level: ensureNull(education_level),
-        social_program_access: ensureNull(social_program_access), status_migratory: ensureNull(status_migratory),
-        address_number: ensureNull(numero), address_complement: ensureNull(complemento),
-        is_pcd: ensureNull(is_pcd) || false, password: ensureNull(password),
-        authorized: authorized === "on" ? true : false
+        full_name: ensureNull(full_name),
+        social_name: ensureNull(social_name),
+        email: ensureNull(email),
+        phone_number: ensureNull(phone_number),
+        crnm: ensureNull(crnm),
+        date_of_birth: ensureNull(date_of_birth),
+        language_preference: ensureNull(language_preference),
+        entry_into_brazil: ensureNull(entry_into_brazil),
+        migration_reason: ensureNull(migration_reason),
+        gender: gender === "Outro" ? ensureNull(other_gender) : ensureNull(gender),
+        country_of_origin: ensureNull(country_of_origin),
+        marital_status: ensureNull(marital_status),
+        literacy_level: ensureNull(literacy_level),
+        address_number: ensureNull(address_number),
+        address_complement: ensureNull(address_complement),
+        password: ensureNull(password),
+        // authorized: authorized === "on" ? true : false,
     };
 
     const address = {
-        cep: ensureNull(cep),
+        postal_code: ensureNull(postal_code),
         street: ensureNull(street),
         neighborhood: ensureNull(neighborhood),
         city: ensureNull(city),
         state: ensureNull(state),
     };
 
-    const migrant_document = {
-        document_type: ensureNull(document_type),
-        document_identification: ensureNull(document_identification)
-    };
-
-    const newData = {
-        migrant, address, migrant_document
-    };
+    const newData = { migrant, address };
 
     try {
-        const { data } = await api.post('/migrants', newData);
-        const migrantId = data.migrant.id
+        const apiInstance = apiWithToken(req.session.token);
+        const response = await apiInstance.post("/migrants", newData);
+        const migrantId = response.data.data.migrant?.id || response.data.migrant?.id;
 
-        res.render('migrants/redirect', { migrantId });
+        res.render("migrants/redirect", { migrantId });
     } catch (error) {
         console.error(error);
-        if (error.response && error.response.data) {
-            return res.status(400).send({ message: error.response.data.message });
-        }
-        res.status(500).render('error', { message: 'Erro ao cadastrar o migrante' });
 
-    };
+        if (error.response && error.response.data) {
+        return res
+            .status(400)
+            .send({ message: error.response.data.message });
+        }
+
+        res
+        .status(500)
+        .render("error", { message: "Erro ao cadastrar o migrante." });
+    }
 };
+
 
 /*
 *   Função para renderizar a página de edição de um migrante.
@@ -124,8 +147,9 @@ const getEditMigrantForm = async (req, res) => {
     const migrantId = req.body.migrant_id; 
 
     try {
-        const response = await api.get(`/migrants/${migrantId}`);
-        const migrant = response.data.migrant;
+    const apiInstance = apiWithToken(req.session.token);
+    const response = await apiInstance.get(`/migrants/${migrantId}`);
+    const migrant = response.data.data || response.data || null;
 
         if (!migrant) {
             return res.status(404).send({ message: 'Migrante não encontrado.' });
@@ -158,58 +182,79 @@ const updateMigrant = async (req, res) => {
     const migrantId = req.body.migrant_id;
 
     const {
-        full_name, social_name, email, phone, whatsapp_number, document_type,
-        document_identification, date_birth, preferred_language, entry_date,
-        migrant_reason, gender, other_gender, nationality, marital_status,
-        education_level, social_program_access, status_migratory, is_pcd,
-        cep, street, neighborhood, city, state,  numero, complemento,
+        full_name,
+        social_name,
+        email,
+        phone_number,
+        crnm,
+        date_of_birth,
+        language_preference,
+        entry_into_brazil,
+        migration_reason,
+        gender,
+        country_of_origin,
+        marital_status,
+        literacy_level,
+        postal_code,
+        street,
+        neighborhood,
+        city,
+        state,
+        address_number,
+        address_complement,
     } = req.body;
 
-    // Função para garantir que os campos sejam null se não forem informados
-    const ensureNull = (value) => (value === undefined || value === null || value === '') ? null : value;
+    const ensureNull = (value) =>
+        value === undefined || value === null || value === "" ? null : value;
 
     const migrant = {
-        full_name: ensureNull(full_name), social_name: ensureNull(social_name), email: ensureNull(email),
-        phone: ensureNull(phone), whatsapp_number: ensureNull(whatsapp_number) || false,
-        date_birth: ensureNull(date_birth),  entry_date: ensureNull(entry_date),
-        preferred_language: ensureNull(preferred_language), migrant_reason: ensureNull(migrant_reason),
-        gender: gender === 'Outro' ? other_gender : gender,  nationality: ensureNull(nationality),
-        marital_status: ensureNull(marital_status), education_level: ensureNull(education_level),
-        social_program_access: ensureNull(social_program_access),  status_migratory: ensureNull(status_migratory),
-        address_number: ensureNull(numero), address_complement: ensureNull(complemento), is_pcd: ensureNull(is_pcd) || false,  
+        full_name: ensureNull(full_name),
+        social_name: ensureNull(social_name),
+        email: ensureNull(email),
+        phone_number: ensureNull(phone_number),
+        crnm: ensureNull(crnm),
+        date_of_birth: ensureNull(date_of_birth),
+        language_preference: ensureNull(language_preference),
+        entry_into_brazil: ensureNull(entry_into_brazil),
+        migration_reason: ensureNull(migration_reason),
+        gender: ensureNull(gender),
+        country_of_origin: ensureNull(country_of_origin),
+        marital_status: ensureNull(marital_status),
+        literacy_level: ensureNull(literacy_level),
+        address_number: ensureNull(address_number),
+        address_complement: ensureNull(address_complement),
     };
 
     const address = {
-        cep: ensureNull(cep),
+        postal_code: ensureNull(postal_code),
         street: ensureNull(street),
         neighborhood: ensureNull(neighborhood),
         city: ensureNull(city),
         state: ensureNull(state),
     };
 
-    const migrant_document = {
-        document_type: ensureNull(document_type),
-        document_identification: ensureNull(document_identification)
-    };
-
-    const newData = {
-        migrant, address, migrant_document
-    };
+    const newData = { migrant, address };
 
     try {
-        await api.put(`/migrants/${migrantId}`, newData); 
+        const apiInstance = apiWithToken(req.session.token);
+        await apiInstance.patch(`/migrants/${migrantId}`, newData);
 
-        res.render('migrants/redirect', { migrantId });
+        res.render("migrants/redirect", { migrantId });
     } catch (error) {
         console.error(error);
 
         if (error.response && error.response.data) {
-            return res.status(400).send({ message: error.response.data.message });
-        };
+        return res
+            .status(400)
+            .send({ message: error.response.data.message });
+        }
 
-        res.status(500).render('error', { message: 'Erro ao atualizar o migrante.' });
-    };
+        res
+        .status(500)
+        .render("error", { message: "Erro ao atualizar o migrante." });
+    }
 };
+
 
 /*
 *   Função para buscar um migrante pelo telefone, email ou documento e renderizar a página de listagem.
@@ -217,8 +262,9 @@ const updateMigrant = async (req, res) => {
 const searchMigrant = async (req, res) => {
     try {
         const query = req.query.query; 
-        const response = await api.get(`/migrants/search?q=${query}`);
-        const migrants = response.data.migrants;
+        const apiInstance = apiWithToken(req.session.token);
+    const response = await apiInstance.get(`/migrants/search?q=${query}`);
+    const migrants = response.data.data || response.data.migrants;
 
         if(!migrants || migrants.length === 0){
             res.render('migrants/migrantsList', { error: 'Nenhum resultado foi encontrado', migrants })
@@ -231,16 +277,15 @@ const searchMigrant = async (req, res) => {
     };
 };
 
-
 /*
 *   Função para verificar se um email já está cadastrado no banco de dados.
 */
 const checkEmail = async (req, res) => {
     try {
         const email = req.body.email;
-        const emailExistResponse = await api.post('/migrants/check-email', { email });
-        const exists = emailExistResponse.data.exists;
-        
+        const apiInstance = apiWithToken(req.session.token);
+    const emailExistResponse = await apiInstance.get(`/migrants/check-email?email=${email}`);
+    const exists = emailExistResponse.data.exists;
         if (exists) {
             return res.status(200).json({ exists: true });
         } else {
@@ -248,7 +293,7 @@ const checkEmail = async (req, res) => {
         };
     } catch (error) {
         console.error(error); 
-        res.status(500).render('error', { message: 'Erro ao verifiacar email.' });
+        res.status(500).render('error', { message: 'Erro ao verificar email.' });
     };
 };
 
@@ -273,7 +318,8 @@ const updatePassword = async (req, res) => {
     try {
         const { confirmPassword } = req.body;
         const migrantId = req.body.migrant_id;
-        api.patch(`/migrants/change-password/${migrantId}`, {password: confirmPassword} );
+        const apiInstance = apiWithToken(req.session.token);
+        apiInstance.patch(`/migrants/change-password/${migrantId}`, {password: confirmPassword} );
 
         res.render('migrants/migrantUpdatePassword', { success: 'Senha atualizada com sucesso.' } );
     } catch (error) {
@@ -287,8 +333,9 @@ const updatePassword = async (req, res) => {
 */
 const getForms = async (req, res) => {
     try {
-        const response = await api.get("/forms");
-        const forms = response.data.forms;
+    const apiInstance = apiWithToken(req.session.token);
+    const response = await apiInstance.get("/forms");
+    const forms = response.data.data || response.data.forms;
 
         if(!forms || forms.length === 0){
             res.render('forms/formsList', { error: 'Nenhum resultado foi encontrado', forms })
@@ -307,8 +354,9 @@ const getForms = async (req, res) => {
 const getFormsByStatus = async (req, res) => {
     try {
         const status = req.query.status || ""; 
-        const response = await api.get(`/forms/status/${status}`);
-        const forms = response.data.forms;
+    const apiInstance = apiWithToken(req.session.token);
+    const response = await apiInstance.get(`/forms?status=${status}`);
+    const forms = response.data.data || response.data.forms;
 
         if (!forms || forms.length === 0) {
             return res.render('forms/formsList', { 
@@ -339,7 +387,8 @@ const getFormsByStatus = async (req, res) => {
 const formRead = async (req, res) => {
     try {
         const { form_id } = req.body;
-        await api.put(`/forms/${form_id}`, { status: 'read'});
+    const apiInstance = apiWithToken(req.session.token);
+    await apiInstance.patch(`/forms/${form_id}`, { status: 'read'});
         req.flash('successMessage', 'Formulário marcado como "lido".')
         res.redirect('/dashboard/forms/migrants');
     } catch (error) {
@@ -354,7 +403,8 @@ const formRead = async (req, res) => {
 const formResolved = async (req, res) => {
     try {
         const { form_id } = req.body;
-        await api.put(`/forms/${form_id}`, { status: 'resolved'});
+   const apiInstance = apiWithToken(req.session.token);
+    await apiInstance.patch(`/forms/${form_id}`, { status: 'resolved'});
         req.flash('successMessage', 'Formulário marcado como "resolvido".')
         res.redirect('/dashboard/forms/migrants');
     } catch (error) {
@@ -369,7 +419,8 @@ const formResolved = async (req, res) => {
 const deleteForms = async (req, res) => {
     const { form_id } = req.body; 
     try {
-        await api.delete(`/forms/${form_id}`);
+        const apiInstance = apiWithToken(req.session.token);
+        await apiInstance.delete(`/forms/${form_id}`);
         
         req.flash('successMessage', 'Formulário deletado com sucesso.')
         res.redirect('/dashboard/forms/migrants'); 

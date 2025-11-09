@@ -22,13 +22,11 @@
                         <p><strong>Email:</strong> <%= institution.email || 'Não disponível' %></p>
                         <p><strong>Telefone Principal:</strong> <%= institution.main_phone || 'Não disponível' %></p>
                         <p><strong>Telefone Secundário:</strong> <%= institution.secondary_phone || 'Não disponível' %></p>
-                        <p><strong>Idioma Principal:</strong> <%= institution.main_language || 'Não disponível' %></p>
                     </div>
                     <div class="col-md-6">
-                        <p><strong>Idioma Secundário:</strong> <%= institution.second_language || 'Não disponível' %></p>
                         <p><strong>Site:</strong> 
-                            <% if (institution.site) { %>
-                                <a href="<%= institution.site %>" target="_blank"><%= institution.site %></a>
+                            <% if (institution.website) { %>
+                                <a href="<%= institution.website %>" target="_blank"><%= institution.website %></a>
                             <% } else { %> Não disponível <% } %>
                         </p>
                         <p><strong>Instagram:</strong> <%= institution.instagram || 'Não disponível' %></p>
@@ -37,7 +35,7 @@
                                 <a href="<%= institution.link_maps %>" target="_blank"><%= institution.link_maps %></a>
                             <% } else { %> Não disponível <% } %>
                         </p>
-                        <p><strong>Categoria:</strong> <%= institution.Category?.category_pt || 'Não disponível' %></p>
+                        <p><strong>Categoria:</strong> <%= institution.category?.category_pt || 'Não disponível' %></p>
                     </div>
                 </div>
             </div>
@@ -47,8 +45,8 @@
                 <i class="bi bi-geo-alt me-2"></i><strong> Endereço</strong>
             </div>
             <div class="card-body">
-                <p><%= institution.Address.street %>, <%= institution.Address.neighborhood %>, <%= institution.Address.city %> - <%= institution.Address.state %>, nº <%= institution.address_number %> <%= institution.address_complement ? ', ' + institution.address_complement : '' %>, CEP: <%= institution.Address.cep %></p>
-                <a href="https://www.google.com/maps?q=<%= encodeURIComponent(institution.Address.street + ', ' + institution.Address.neighborhood + ', ' + institution.Address.city + ', ' + institution.Address.state + ', ' + institution.Address.cep) %>" target="_blank" class="btn btn-outline-primary">
+                <p><%= institution.address.street %>, <%= institution.address.neighborhood %>, <%= institution.address.city %> - <%= institution.address.state %>, nº <%= institution.address_number %> <%= institution.address_complement ? ', ' + institution.address_complement : '' %>, CEP: <%= institution.address.cep %></p>
+                <a href="https://www.google.com/maps?q=<%= encodeURIComponent(institution.address.street + ', ' + institution.address.neighborhood + ', ' + institution.address.city + ', ' + institution.address.state + ', ' + institution.address.cep) %>" target="_blank" class="btn btn-outline-primary">
                     <i class="bi bi-map"></i> Ver no Mapa
                 </a>
             </div>
@@ -58,12 +56,12 @@
                 <i class="bi bi-info-circle me-2"></i><strong> Outras Informações</strong>
             </div>
             <div class="card-body">
-                <p><strong>Descrição:</strong> <%= institution.InstitutionDescription?.description_pt || 'Não disponível' %></p>
-                <p><strong>Dias e Horários de Funcionamento:</strong> <%= institution.ServiceHour?.service_hours_pt || 'Não disponível' %></p>
-                <p><strong>População Alvo:</strong> <%= institution.TargetPopulation?.target_populations_pt || 'Não disponível' %></p>
-                <p><strong>Requisitos e Restrições:</strong> <%= institution.RequirementRestriction?.requirements_restrictions_pt || 'Não disponível' %></p>
-                <p><strong>Serviços Oferecidos:</strong> <%= institution.ServicesOffered?.services_offered_pt || 'Não disponível' %></p>
-                <p><strong>Custo dos Serviços:</strong> <%= institution.ServiceCost?.services_costs_pt || 'Não disponível' %></p>
+                <p><strong>Descrição:</strong> <%= institution.institution_descriptions?.institution_description_pt || 'Não disponível' %></p>
+                <p><strong>Dias e Horários de Funcionamento:</strong> <%= institution.service_hours?.service_hours_pt || 'Não disponível' %></p>
+                <p><strong>População Alvo:</strong> <%= institution.target_populations?.target_populations_pt || 'Não disponível' %></p>
+                <p><strong>Requisitos e Restrições:</strong> <%= institution.requirement_restriction?.requirements_restrictions_pt || 'Não disponível' %></p>
+                <p><strong>Serviços Oferecidos:</strong> <%= institution.services_offered?.services_offered_pt || 'Não disponível' %></p>
+                <p><strong>Custo dos Serviços:</strong> <%= institution.service_cost?.services_costs_pt || 'Não disponível' %></p>
             </div>
         </div>
         <div class="card shadow rounded mb-4">
@@ -71,10 +69,10 @@
                 <i class="bi bi-person-check me-2"></i><strong> Responsável pelo Cadastro</strong>
             </div>
             <div class="card-body">
-                <p><strong>Nome:</strong> <%= institution.ResponsibleUser?.name || 'Não disponível' %></p>
-                <p><strong>Posição:</strong> <%= institution.ResponsibleUser?.position || 'Não disponível' %></p>
-                <p><strong>Setor:</strong> <%= institution.ResponsibleUser?.sector || 'Não disponível' %></p>
-                <p><strong>Função:</strong> <%= institution.ResponsibleUser?.role || 'Não disponível' %></p>
+                <p><strong>Nome:</strong> <%= institution.responsible_user_name || 'Não disponível' %></p>
+                <p><strong>Posição:</strong> <%= institution.responsible_user_position || 'Não disponível' %></p>
+                <p><strong>Setor:</strong> <%= institution.responsible_user_sector || 'Não disponível' %></p>
+                <p><strong>Função:</strong> <%= institution.responsible_user_role || 'Não disponível' %></p>
             </div>
         </div>
         <div class="text-left mt-3">

@@ -21,19 +21,19 @@
                         <p><strong>Nome Completo:</strong> <%= migrant.full_name %></p>
                         <p><strong>Nome Social:</strong> <%= migrant.social_name || 'Não disponível' %></p>
                         <p><strong>Email:</strong> <%= migrant.email %></p>
-                        <p><strong>Telefone:</strong> <%= migrant.phone || 'Não disponível' %></p>
-                        <p><strong>WhatsApp:</strong> <%= migrant.whatsapp_number ? 'Sim' : 'Não' %></p>
-                        <p><strong>Documento:</strong> <%= migrant.MigrantDocument?.document_type || 'Não disponível' %> | <%= migrant.MigrantDocument?.document_identification || 'Não disponível' %></p>
+                        <p><strong>Telefone:</strong> <%= migrant.phone_number || 'Não disponível' %></p>
+                        <!-- <p><strong>WhatsApp:</strong> <%= migrant.whatsapp_number ? 'Sim' : 'Não' %></p> -->
+                        <p><strong>CRNM:</strong> <%= migrant.crnm || 'Não disponível' %> </p>
                         <p><strong>Data de Nascimento:</strong> <span id="birthDate">Carregando...</span></p>
+                        <p><strong>Idioma preferido:</strong> <%= migrant.language_preference || 'Não disponível' %></p>
                     </div>
                     <div class="col-md-6">
-                        <p><strong>Idioma preferido:</strong> <%= migrant.preferred_language || 'Não disponível' %></p>
                         <p><strong>Data de Entrada no Brasil:</strong> <span id="entryDate">Carregando...</span></p>
-                        <p><strong>Razão de Imigração:</strong> <%= migrant.migrant_reason || 'Não disponível' %></p>
+                        <p><strong>Razão de Imigração:</strong> <%= migrant.migration_reason || 'Não disponível' %></p>
                         <p><strong>Gênero:</strong> <%= migrant.gender || 'Não disponível' %></p>
-                        <p><strong>Nacionalidade:</strong> <%= migrant.nationality || 'Não disponível' %></p>
+                        <p><strong>País de Origem:</strong> <%= migrant.country_of_origin || 'Não disponível' %></p>
                         <p><strong>Estado Civil:</strong> <%= migrant.marital_status || 'Não disponível' %></p>
-                        <p><strong>Escolaridade:</strong> <%= migrant.education_level || 'Não disponível' %></p>
+                        <p><strong>Escolaridade:</strong> <%= migrant.literacy_level || 'Não disponível' %></p>
                     </div>
                 </div>
             </div>
@@ -43,15 +43,15 @@
                 <i class="bi bi-geo-alt me-2"></i><strong> Endereço</strong>
             </div>
             <div class="card-body mt-3">
-                <p><%= migrant.Address.street %>, <%= migrant.Address.neighborhood %>, <%= migrant.Address.city %> - <%= migrant.Address.state %>, nº <%= migrant.address_number %> <%= migrant.address_complement ? ', ' + migrant.address_complement : '' %>, CEP: <%= migrant.Address.cep %></p>
-                <a href="https://www.google.com/maps?q=<%= encodeURIComponent(migrant.Address.street + ', ' + migrant.Address.neighborhood + ', ' + migrant.Address.city + ', ' + migrant.Address.state + ', ' + migrant.Address.cep) %>" 
+                <p><%= migrant.address.street %>, <%= migrant.address.neighborhood %>, <%= migrant.address.city %> - <%= migrant.address.state %>, nº <%= migrant.address_number %> <%= migrant.address_complement ? ', ' + migrant.address_complement : '' %>, CEP: <%= migrant.address.cep %></p>
+                <a href="https://www.google.com/maps?q=<%= encodeURIComponent(migrant.address.street + ', ' + migrant.address.neighborhood + ', ' + migrant.address.city + ', ' + migrant.address.state + ', ' + migrant.address.cep) %>" 
                    target="_blank" 
                    class="btn btn-outline-primary">
                     <i class="bi bi-map"></i> Ver no Mapa
                 </a>
             </div>
         </div>
-        <div class="card shadow rounded mb-4">
+        <!-- <div class="card shadow rounded mb-4">
             <div class="card-header bg-primary text-white">
                 <i class="bi bi-info-circle me-2"></i><strong> Outras Informações</strong>
             </div>
@@ -66,7 +66,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
         <div class="d-flex justify-content-start mt-3">
             <a href="/dashboard/migrants" class="btn btn-secondary me-2 mr-2">
                 <i class="bi bi-arrow-left"></i> Voltar
@@ -113,8 +113,8 @@
     </div>
     <%- include("../partials/footer.ejs") %>
     <script>
-        const migrantBirthDate = "<%= migrant.date_birth %>";
-        const migrantEntryDate = "<%= migrant.entry_date %>";
+        const migrantBirthDate = "<%= migrant.date_of_birth %>";
+        const migrantEntryDate = "<%= migrant.entry_into_brazil %>";
     </script>
     <script src="/js/scriptMigrantDetails.js"></script>
 </body>

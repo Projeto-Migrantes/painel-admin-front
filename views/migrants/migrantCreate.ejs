@@ -1,212 +1,191 @@
 <%- include("../partials/header.ejs") %>
 <body>
-    <%- include("../partials/navbar.ejs") %>
-    <br><br>
-    <div class="container mt-5 mb-4">
-        <h1 class="mt-4 mb-3 text-primary">
-            <i class="bi bi-person-plus-fill"></i> Cadastrar Migrante
-        </h1>
-        <form action="/dashboard/migrant/create" method="POST" >
-            <input type="hidden" name="_method" value="POST">
-            <div class="form-group">
-                <label for="full_name">Nome Completo*</label>
-                <input type="text" class="form-control" id="full_name" name="full_name" placeholder="Nome Completo" required maxlength="150">
-            </div>
-            <div class="form-group">
-                <label for="social_name">Nome Social</label>
-                <input type="text" class="form-control" id="social_name" name="social_name" placeholder="Nome Social" maxlength="150">
-            </div>
-            <div class="form-group">
-                <label for="gender">Gênero*</label>
-                <select class="form-control" id="gender" name="gender" required onchange="toggleOtherGenderInput()">
-                    <option value="" disabled selected>Selecione uma opção</option>
-                    <option value="Masculino">Masculino</option>
-                    <option value="Feminino">Feminino</option>
-                    <option value="Não-Binário">Não-Binário</option>
-                    <option value="Transfeminino">Transfeminino</option>
-                    <option value="Transmasculino">Transmasculino</option>
-                    <option value="Agênero">Agênero</option>
-                    <option value="Gênero Fluido">Gênero Fluido</option>
-                    <option value="Prefiro não informar">Prefiro não informar</option>
-                    <option value="Outro">Outro</option>
-                </select>
-                <input type="text" class="form-control d-none" id="other_gender" name="other_gender" placeholder="Especifique o gênero" aria-label="Especifique o gênero" maxlength="80">
-            </div>
-            <div class="form-group">
-                <label for="email">Email*</label>
-                <input type="email" class="form-control" id="email" name="email" placeholder="Email" required maxlength="100">
-                <div id="emailFeedback"></div>
-            </div>
-            <div class="form-group">
-                <label for="phone">Telefone*</label>
-                <input type="text" class="form-control" id="phone" name="phone" maxlength="15" required oninput="formatPhone(this)" placeholder="Telefone" >
-            </div>
-            <div class="form-group">
-                <label for="whatsapp_number">Número do WhatsApp?*</label>
-                <select class="form-control" id="whatsapp_number" name="whatsapp_number" required>
-                    <option value="" disabled selected>Selecione uma opção</option>
-                    <option value="true">Sim</option>
-                    <option value="false">Não</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="document_type">Tipo de Documento*</label>
-                <input type="text" class="form-control" id="document_type" name="document_type" placeholder="Tipo de Documento" required maxlength="120">
-            </div>
-            <div class="form-group">
-                <label for="document_identification">Número do Documento*</label>
-                <input type="text" class="form-control" id="document_identification" name="document_identification" placeholder="Número do Documento" required maxlength="120">
-            </div>
-            <div class="form-group">
-                <label for="date_birth">Data de Nascimento*</label>
-                <input type="date" class="form-control" id="date_birth" name="date_birth" required>
-            </div>
-            <div class="form-group">
-                <label for="preferred_language">Idioma Preferido*</label>
-                <input type="text" class="form-control" id="preferred_language" name="preferred_language" placeholder="Idioma Preferido" required maxlength="100">
-            </div>
-            <div class="form-group">
-                <label for="entry_date">Data de Entrada no Brasil*</label>
-                <input type="date" class="form-control" id="entry_date" name="entry_date" required>
-            </div>
-            <div class="form-group">
-                <label for="migrant_reason">Razão de Imigração*</label>
-                <input type="text" class="form-control" id="migrant_reason" name="migrant_reason" placeholder="Razão de Imigração" required maxlength="240">
-            </div>
-            <div class="form-group">
-                <label for="nationality">Nacionalidade*</label>
-                <input type="text" class="form-control" id="nationality" name="nationality" placeholder="Nacionalidade" required maxlength="120">
-            </div>
-            <div class="form-group">
-                <label for="gender">Estado Civil*</label>
-                <select class="form-control" id="marital_status" name="marital_status" required>
-                    <option value="" disabled selected>Selecione uma opção</option>
-                    <option value="Solteiro">Solteiro</option>
-                    <option value="Casado">Casado</option>
-                    <option value="Separado">Separado</option>
-                    <option value="Divorciado">Divorciado</option>
-                    <option value="Viúvo">Viúvo</option>
-                    <option value="Prefiro não informar">Não informado</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="education_level">Escolaridade*</label>
-                <select class="form-control" name="education_level" id="education_level" required>
-                    <option value="" disabled selected>Selecione uma opção</option>
-                    <option value="Ensino fundamental completo">Ensino fundamental completo</option>
-                    <option value="Ensino médio completo">Ensino médio completo</option>
-                    <option value="Superior completo">Superior completo</option>
-                    <option value="Pós-graduação">Pós-graduação</option>
-                    <option value="Mestrado">Mestrado</option>
-                    <option value="Doutorado">Doutorado</option>
-                    <option value="Pós-Doutorado">Pós-Doutorado</option>
-                    <option value="Não informado">Não informado</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="social_program_access">Acesso a Programas Sociais oferecidos pelo Governo Brasileiro:</label>
-                <input type="text" class="form-control" name="social_program_access" id="social_program_access"  placeholder=" Programas Sociais oferecidos pelo Governo Brasileiro" maxlength="240"> 
-            </div>
-            <div class="form-group">
-                <label for="status_migratory">Status Migratório</label>
-                <input type="text" class="form-control" id="status_migratory" name="status_migratory" placeholder="Status Migratório" maxlength="200">
-            </div>
-            <div class="form-group">
-                <label for="is_pcd">PcD (Pessoa com Deficiência)*</label>
-                <select class="form-control" id="is_pcd" name="is_pcd" required>
-                    <option value="" disabled selected>Selecione uma opção</option>
-                    <option value="true">Sim</option>
-                    <option value="false">Não</option>
-                </select>
-            </div>
-            <br>
-            <hr>
-            <h3 class="mt-5 mb-3 text-primary">
-                <i class="bi bi-geo-alt-fill"></i> Endereço
-            </h3>
-            <div class="form-group">
-                <label for="cep" >CEP*</label>
-                <input 
-                    type="text" 
-                    class="form-control" 
-                    id="cep" 
-                    name="cep" 
-                    placeholder="Digite o CEP" 
-                    aria-label="CEP" 
-                    required
-                    oninput="formatCEP(this)"
-                    maxlength="9"
-                >
-            </div>
-            <button type="button" id="btnBuscarEndereco" class="btn btn-primary mb-2">Buscar Endereço</button>
-            <div class="form-group">
-                <label for="street">Logradouro*</label>
-                <input type="text" class="form-control" id="street" name="street" placeholder="Logradouro" aria-label="Logradouro" required maxlength="255">
-            </div>
-            <div class="form-group">
-                <label for="neighborhood">Bairro*</label>
-                <input type="text" class="form-control" id="neighborhood" name="neighborhood" placeholder="Bairro" aria-label="Bairro" required maxlength="255">
-            </div>
-            <div class="form-group">
-                <label for="city">Cidade*</label>
-                <input type="text" class="form-control" id="city" name="city" placeholder="Cidade" aria-label="Cidade" required maxlength="150">
-            </div>
-            <div class="form-group">
-                <label for="state">Estado*</label>
-                <input type="text" class="form-control" id="state" name="state" placeholder="Estado" aria-label="Estado" required maxlength="150">
-            </div>
-            <div class="form-group">
-                <label for="numero">Número*</label>
-                <input type="text" class="form-control" id="numero" name="numero" placeholder="Número" aria-label="Número" required maxlength="10">
-            </div>
-            <div class="form-group">
-                <label for="complemento">Complemento (opcional)</label>
-                <input type="text" class="form-control" id="complemento" name="complemento" placeholder="Complemento" aria-label="Complemento" maxlength="240">
-            </div>
-            <div class="alert alert-warning" role="alert">
-                <i class="bi bi-exclamation-circle"></i> Caso a busca pelo endereço não retorne resultados, preencha os campos acima manualmente.
-            </div>
-            <br>
-            <hr>
-            <h3 class="mt-5 mb-3 text-primary">
-                <i class="bi bi-lock-fill"></i> Senha do migrante
-            </h3>
-            <p>Esta senha será usada juntamente com o e-mail cadastrado para acessar o aplicativo <strong>Rede Sem Fronteiras</strong>.</p>
-            <div class="form-group">
-                <label for="password">Senha*</label>
-                <div class="input-group">
-                    <input type="password" class="form-control" id="password" name="password" placeholder="Senha" required maxlength="20">
-                    <button class="btn btn-outline-secondary" type="button" id="togglePassword">
-                        <i class="bi bi-eye-slash" id="eyeIcon"></i>
-                    </button>
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="confirm_password">Confirme a Senha*</label>
-                <div class="input-group">
-                    <input type="password" class="form-control" id="confirm_password" name="confirm_password" placeholder="Confirme a Senha" required maxlength="20">
-                    <button class="btn btn-outline-secondary" type="button" id="toggleConfirmPassword">
-                        <i class="bi bi-eye-slash" id="eyeIconConfirm"></i>
-                    </button>
-                </div>
-            </div>
-            <div class="form-group form-check">
-                <input type="checkbox" class="form-check-input" id="terms" name="authorized" required>
-                <label class="form-check-label" for="terms"> O migrante aceita os <a target="_blank" href="/terms/migrante">Termos e Condições</a></label>
-            </div>
+  <%- include("../partials/navbar.ejs") %>
+  <br><br>
+  <div class="container mt-5 mb-4">
+    <h1 class="mt-4 mb-3 text-primary">
+      <i class="bi bi-person-plus-fill"></i> Cadastrar Migrante
+    </h1>
 
-            <!-- Alerta para validação -->
-            <div id="alert" class="alert alert-danger d-none" role="alert"></div>
-            <button type="submit" class="btn btn-success">
-                <i class="bi bi-person"></i> Cadastrar Migrante
-            </button> 
-            <a href="/dashboard/migrants" class="btn btn-secondary">
-                <i class="bi bi-x-lg"></i> Cancelar
-            </a>
-        </form>
-    </div>
-<script src="/js/scriptMigrantCreate.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<%- include("../partials/footer.ejs") %>
+    <form action="/dashboard/migrant/create" method="POST">
+      <input type="hidden" name="_method" value="POST">
+
+      <div class="form-group">
+        <label for="full_name">Nome Completo*</label>
+        <input type="text" class="form-control" id="full_name" name="full_name" maxlength="150" required placeholder="Nome Completo">
+      </div>
+
+      <div class="form-group">
+        <label for="social_name">Nome Social</label>
+        <input type="text" class="form-control" id="social_name" name="social_name" maxlength="150" placeholder="Nome Social">
+      </div>
+
+      <div class="form-group">
+        <label for="gender">Gênero*</label>
+        <select class="form-control" id="gender" name="gender" required onchange="toggleOtherGenderInput()">
+          <option value="" disabled selected>Selecione uma opção</option>
+          <option value="Masculino">Masculino</option>
+          <option value="Feminino">Feminino</option>
+          <option value="Não-binário">Não-binário</option>
+          <option value="Transfeminino">Transfeminino</option>
+          <option value="Transmasculino">Transmasculino</option>
+          <option value="Agênero">Agênero</option>
+          <option value="Gênero Fluido">Gênero Fluido</option>
+          <option value="Prefiro não informar">Prefiro não informar</option>
+          <option value="Outro">Outro</option>
+        </select>
+        <input type="text" class="form-control d-none mt-2" id="other_gender" name="other_gender" maxlength="80" placeholder="Especifique o gênero">
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email*</label>
+        <input type="email" class="form-control" id="email" name="email" maxlength="100" required placeholder="Email">
+        <div id="emailFeedback"></div>
+      </div>
+
+      <div class="form-group">
+        <label for="phone_number">Telefone</label>
+        <input type="text" class="form-control" id="phone_number" name="phone_number" maxlength="15" oninput="formatPhone(this)" placeholder="Telefone">
+      </div>
+
+      <div class="form-group">
+        <label for="crnm">CRNM</label>
+        <input type="text" class="form-control" id="crnm" name="crnm" maxlength="50" placeholder="Número CRNM">
+      </div>
+
+      <div class="form-group">
+        <label for="date_of_birth">Data de Nascimento*</label>
+        <input type="date" class="form-control" id="date_of_birth" name="date_of_birth" required>
+      </div>
+
+      <div class="form-group">
+        <label for="language_preference">Idioma Preferido*</label>
+        <input type="text" class="form-control" id="language_preference" name="language_preference" maxlength="100" required placeholder="Idioma Preferido">
+      </div>
+
+      <div class="form-group">
+        <label for="entry_into_brazil">Data de Entrada no Brasil*</label>
+        <input type="date" class="form-control" id="entry_into_brazil" name="entry_into_brazil" required>
+      </div>
+
+      <div class="form-group">
+        <label for="migration_reason">Razão de Imigração*</label>
+        <input type="text" class="form-control" id="migration_reason" name="migration_reason" maxlength="240" required placeholder="Motivo da Imigração">
+      </div>
+
+      <div class="form-group">
+        <label for="country_of_origin">País de Origem*</label>
+        <input type="text" class="form-control" id="country_of_origin" name="country_of_origin" maxlength="120" required placeholder="País de Origem">
+      </div>
+
+      <div class="form-group">
+        <label for="marital_status">Estado Civil*</label>
+        <select class="form-control" id="marital_status" name="marital_status" required>
+          <option value="" disabled selected>Selecione uma opção</option>
+          <option value="Solteiro">Solteiro</option>
+          <option value="Casado">Casado</option>
+          <option value="Separado">Separado</option>
+          <option value="Divorciado">Divorciado</option>
+          <option value="Viúvo">Viúvo</option>
+          <option value="Prefiro não informar">Prefiro não informar</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="literacy_level">Escolaridade*</label>
+        <input type="text" class="form-control" id="literacy_level" name="literacy_level" maxlength="150" required placeholder="Ex: Ensino Médio Completo">
+      </div>
+
+      <hr>
+      <h3 class="mt-4 text-primary">
+        <i class="bi bi-geo-alt-fill"></i> Endereço
+      </h3>
+
+      <div class="form-group">
+        <label for="postal_code">CEP*</label>
+        <input type="text" class="form-control" id="postal_code" name="postal_code" maxlength="9" required oninput="formatCEP(this)" placeholder="Digite o CEP">
+        <button type="button" id="btnBuscarEndereco" class="btn btn-primary mt-2">Buscar Endereço</button>
+      </div>
+
+      <div class="form-group">
+        <label for="street">Logradouro*</label>
+        <input type="text" class="form-control" id="street" name="street" maxlength="255" required placeholder="Rua, Avenida...">
+      </div>
+
+      <div class="form-group">
+        <label for="neighborhood">Bairro*</label>
+        <input type="text" class="form-control" id="neighborhood" name="neighborhood" maxlength="255" required placeholder="Bairro">
+      </div>
+
+      <div class="form-group">
+        <label for="city">Cidade*</label>
+        <input type="text" class="form-control" id="city" name="city" maxlength="150" required placeholder="Cidade">
+      </div>
+
+      <div class="form-group">
+        <label for="state">Estado*</label>
+        <input type="text" class="form-control" id="state" name="state" maxlength="150" required placeholder="Estado">
+      </div>
+
+      <div class="form-group">
+        <label for="address_number">Número*</label>
+        <input type="text" class="form-control" id="address_number" name="address_number" maxlength="10" required placeholder="Número">
+      </div>
+
+      <div class="form-group">
+        <label for="address_complement">Complemento</label>
+        <input type="text" class="form-control" id="address_complement" name="address_complement" maxlength="240" placeholder="Complemento (opcional)">
+      </div>
+
+      <div class="alert alert-warning" role="alert">
+        <i class="bi bi-exclamation-circle"></i>
+        Caso a busca pelo endereço não retorne resultados, preencha os campos acima manualmente.
+      </div>
+
+      <hr>
+      <h3 class="mt-5 mb-3 text-primary">
+        <i class="bi bi-lock-fill"></i> Senha do Migrante
+      </h3>
+      <p>Esta senha será usada junto ao e-mail para acessar o aplicativo <strong>Rede Sem Fronteiras</strong>.</p>
+
+      <div class="form-group">
+        <label for="password">Senha*</label>
+        <div class="input-group">
+          <input type="password" class="form-control" id="password" name="password" maxlength="20" required placeholder="Senha">
+          <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+            <i class="bi bi-eye-slash" id="eyeIcon"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="confirm_password">Confirme a Senha*</label>
+        <div class="input-group">
+          <input type="password" class="form-control" id="confirm_password" name="confirm_password" maxlength="20" required placeholder="Confirme a Senha">
+          <button class="btn btn-outline-secondary" type="button" id="toggleConfirmPassword">
+            <i class="bi bi-eye-slash" id="eyeIconConfirm"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="form-check mb-3">
+        <input type="checkbox" class="form-check-input" id="terms" name="authorized" required>
+        <label class="form-check-label" for="terms">
+          O migrante aceita os <a href="/terms/migrante" target="_blank">Termos e Condições</a>
+        </label>
+      </div>
+
+      <button type="submit" class="btn btn-success">
+        <i class="bi bi-person"></i> Cadastrar Migrante
+      </button>
+      <a href="/dashboard/migrants" class="btn btn-secondary">
+        <i class="bi bi-x-lg"></i> Cancelar
+      </a>
+    </form>
+  </div>
+
+  <script src="/js/scriptMigrantCreate.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <%- include("../partials/footer.ejs") %>
 </body>
 </html>

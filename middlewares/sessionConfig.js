@@ -23,25 +23,27 @@ const pgPool = new Pool({
 * Criação do Store para armazenar as sessões no PostgreSQL
 */
 const pgSessionStore = new PgSession(session);
-
+ 
 /*
 * Configuração do middleware de sessão
 */
 const sessionMiddleware = session({
     store: new pgSessionStore({
         pool: pgPool,  
-        tableName: 'session',  
+        tableName: 'session',
+        createTableIfMissing: true, // <-- add this to auto-create the "session" table
         ttl: 60 * 60 * 24,  
         cleanInterval: 60 * 60 * 1000,  
     }),
     secret: process.env.KEY_SECRET,
     resave: false,
     saveUninitialized: false,
-    cookie: {
-        maxAge: 1000 * 60 * 60 * 24,  
-        secure: false,
-        sameSite: 'Strict',
-    },
+    cookie: { secure: false }
+    // cookie: {
+    //     maxAge: 1000 * 60 * 60 * 24,  
+    //     secure: false,
+    //     sameSite: 'Strict',
+    // },
 });
 
 

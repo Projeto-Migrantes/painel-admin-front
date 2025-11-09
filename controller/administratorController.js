@@ -1,14 +1,15 @@
-import { api } from '../config/config.js';
+import { api, apiWithToken } from '../config/config.js';
 
 /*
-*   Função para buscar todos os usuários cadastrados no sistema.
+*   Função para buscar todos os administradores cadastrados no sistema.
 */
 const getUsers = async (req, res) => {
     try {
-        const response = await api.get('/users');
-        let users = response.data.users;
-        users = users.filter(user => user.email !== req.user.email);
-        res.render('users/userList', { users })
+    const apiInstance = apiWithToken(req.session.token);
+    const response = await apiInstance.get('/administrators');
+    let administrators = response.data.data || response.data.administrators || [];
+        administrators = administrators.filter(administrator => administrator.email !== req.administrator.email);
+        res.render('administrators/administratorList', { administrators })
     } catch (error) {
         console.error('Erro ao buscar administradores:', error);
         res.status(500).render('error', { message: 'Erro ao buscar administrador' });
@@ -16,20 +17,20 @@ const getUsers = async (req, res) => {
 };
 
 /*
-*   Função para renderizar a página de cadastro de um novo usuário.
+*   Função para renderizar a página de cadastro de um novo administrador.
 */
 const getRegisterUser = (req, res) => {
     try {
         
-        res.render('users/userCreate');
+        res.render('administrators/administratorCreate');
        } catch (error) {
-           res.render('error', { error });
-           res.status(500).render('error', { message: 'Erro ao acessar a página de cadastro.' });
+        res.render('error', { error });
+        res.status(500).render('error', { message: 'Erro ao acessar a página de cadastro.' });
        };
 };
 
 /*
-*   Função para criar um novo usuário.
+*   Função para criar um novo administrador.
 */
 const createUser = async (req, res) => {
     const {
@@ -45,10 +46,11 @@ const createUser = async (req, res) => {
     };
 
     try {
-         await api.post('/users', newData);
+        const apiInstance = apiWithToken(req.session.token);
+         await api.post('/administrators', newData);
 
         req.flash('successMessage', 'Administrador cadastrado com sucesso!');
-        res.redirect('/dashboard/users');
+        res.redirect('/dashboard/administrators');
     } catch (error) {
         console.error(error);
         res.status(500).render('error', { message: 'Erro ao cadastrar o administrador' });
@@ -56,20 +58,20 @@ const createUser = async (req, res) => {
 };
 
 /*
-*   Função para renderizar a página de edição de um usuário.
+*   Função para renderizar a página de edição de um administrador.
 */
 const getEditUserForm = async (req, res) => {
-    const userId = req.body.user_id; 
+    const administratorId = req.body.administrator_id; 
 
     try {
-        const response = await api.get(`/users/${userId}`);
-        const user = response.data.user;
+    const response = await api.get(`/administrators/${administratorId}`);
+    const administrator = response.data.data || response.data.administrator || null;
 
-        if (!user) {
+        if (!administrator) {
             return res.status(404).send({ message: 'Administrador não encontrado.' });
         };
 
-        res.render('users/userEdit', { user });
+        res.render('administrators/administratorEdit', { administrator });
     } catch (error) {
         console.error(error);
         res.status(500).render('error', { message: 'Erro ao obter os detalhes do administrador para edição.' });
@@ -77,7 +79,7 @@ const getEditUserForm = async (req, res) => {
 };
 
 const updateUser = async (req, res) => {
-    const userId = req.body.user_id;
+    const administratorId = req.body.administrator_id;
     const {
         name,
         email,
@@ -91,10 +93,11 @@ const updateUser = async (req, res) => {
     };
 
     try {
-        await api.put(`/users/${userId}`, updatedData);
+    // OpenAPI: prefer PATCH for partial updates
+    await api.patch(`/administrators/${administratorId}`, updatedData);
 
         req.flash('successMessage', 'Administrador atualizado com sucesso!');
-        res.redirect('/dashboard/users');
+        res.redirect('/dashboard/administrators');
     } catch (error) {
         console.error(error);
         res.status(500).render('error', { message: 'Erro ao atualizar o administrador' });
@@ -102,15 +105,15 @@ const updateUser = async (req, res) => {
 };
 
 /*
-*   Função para deletar um usuário.
+*   Função para deletar um administrador.
 */
 const deleteUser = async (req, res) => {
-    const userId = req.body.user_id;
+    const administratorId = req.body.administrator_id;
     try {
-        await api.delete(`/users/${userId}`);
+        await api.delete(`/administrators/${administratorId}`);
 
         req.flash('successMessage', 'Administrador deletado com sucesso!');
-        res.redirect('/dashboard/users');
+        res.redirect('/dashboard/administrators');
     } catch (error) {
         console.error(error);
         res.status(500).render('error', { message: 'Erro ao deletar o administrador' });
@@ -118,19 +121,19 @@ const deleteUser = async (req, res) => {
 };
 
 /*
-*   Função para renderizar a página de atualização de senha do usuário.
+*   Função para renderizar a página de atualização de senha do administrador.
 */
 const getUpdatePassword = async (req, res) => {
     try {
-        const { user_id, user_role, user_name, user_email } = req.body;
-        const user_edit = {
-            id: user_id,
-            name: user_name,
-            email: user_email,
-            role: user_role,
+        const { administrator_id, administrator_role, administrator_name, administrator_email } = req.body;
+        const administrator_edit = {
+            id: administrator_id,
+            name: administrator_name,
+            email: administrator_email,
+            role: administrator_role,
         };
 
-        res.render('users/userUpdatePassword', { user_edit });
+        res.render('administrators/administratorUpdatePassword', { administrator_edit });
     } catch (error) {
         console.error(error);
         res.status(500).render('error', { message: 'Erro ao carregar página de atualização de senha.' });
@@ -138,16 +141,16 @@ const getUpdatePassword = async (req, res) => {
 };
 
 /*
-*   Função para atualizar a senha do usuário.
+*   Função para atualizar a senha do administrador.
 */
 const updatePassword = async (req, res) => {
     try {
         const { confirmPassword } = req.body;
-        const userId = req.body.user_id;
-        api.patch(`/users/change-password/${userId}`, {password: confirmPassword} );
+        const administratorId = req.body.administrator_id;
+        api.patch(`/administrators/change-password/${administratorId}`, {password: confirmPassword} );
 
         req.flash('successMessage', 'Senha atualizada com sucesso!');
-        res.redirect('/dashboard/users');
+        res.redirect('/dashboard/administrators');
     } catch (error) {
         console.error('Erro ao buscar alterar senhar:', error);
         return res.render('migrants/migrantUpdatePassword', { error: 'Erro ao atualizar senha do administrador.' });
@@ -161,7 +164,7 @@ const checkEmail = async (req, res) => {
     try {
         const email = req.body.email;
         
-        const emailExistResponse = await api.post('/users/check-email', { email });
+        const emailExistResponse = await api.post('/administrators/check-email', { email });
 
         const exists = emailExistResponse.data.exists;
         
